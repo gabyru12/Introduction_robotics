@@ -1,0 +1,12 @@
+name: intro-robotics-vb
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy
+  - pip
+  # Dependencies for the RL phase will be added later:
+  # - pytorch (via pip)
+  # - stable-baselines3 (via pip)
+  # - gymnasium (via pip)

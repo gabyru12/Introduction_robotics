@@ -1,0 +1,477 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/road/protos/CurvedRoadSegment.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Parquetry.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/devices/sick/protos/SickLms291.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/road/protos/StraightRoadSegment.proto"
+# EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/vehicles/protos/bmw/BmwX5.proto"
+EXTERNPROTO "../protos/BmwX5.proto"
+
+WorldInfo {
+  basicTimeStep 8
+  ERP 0.2
+  CFM 0.0001
+  lineScale 25
+  contactProperties [
+    ContactProperties {
+        material2 "BmwX5Wheels"
+        coulombFriction [ 0.6 ]
+        softCFM 0.0002
+        softERP 0.2
+        bumpSound ""
+        rollSound ""
+        slideSound ""
+    }
+  ]
+
+}
+Viewpoint {
+  orientation 0.3102400431711437 -0.5152325325595104 -0.7989283778947147 4.991472472753488
+  position -27.14183063131479 -62.037101587370834 37.41122128821774
+  follow "vehicle"
+  followType "Pan and Tilt Shot"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+  size 200 200
+  appearance Parquetry {
+    type "dark strip"
+    colorOverride 0.3 0.7 0.6
+  }
+}
+DEF VEHICLE BmwX5 {
+  translation -9.968638699181202 -25.123205065690296 0.08312736099199214
+  rotation 0.1937856260480146 -0.5387758289812039 0.819858364135413 0.051788701611307164
+  controller "<extern>"
+  supervisor TRUE
+  sensorsSlotFront [
+    SickLms291 {
+      translation 0.06 0 0
+    }
+    TouchSensor {
+      translation -0.05 0 0
+      children [
+        DEF BUMPER_SHAPE Shape {
+          appearance DEF BUMPER_APPEARANCE PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BUMPER_GEOMETRY Box {
+            size 0.1 1.5 0.1
+          }
+        }
+      ]
+      name "touch sensor front"
+      boundingObject USE BUMPER_GEOMETRY
+    }
+  ]
+  sensorsSlotTop [
+    Camera {
+      translation 0.72 0 -0.05
+      children [
+        Pose {
+          translation -0.05 0 0
+          rotation 0 -1 0 1.5708
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.8 0.8 0.8
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.1
+                radius 0.04
+              }
+            }
+          ]
+        }
+      ]
+      fieldOfView 1
+      width 128
+    }
+  ]
+  sensorsSlotCenter [
+    TouchSensor {
+      translation 1.62 1 0.48
+      rotation 0 0 1 -1.5707953071795862
+      children [
+        Shape {
+          appearance USE BUMPER_APPEARANCE
+          geometry DEF BUMPER_GEOMETRY_LARGE Box {
+            size 0.1 4 0.1
+          }
+        }
+      ]
+      name "touch sensor left"
+      boundingObject USE BUMPER_GEOMETRY_LARGE
+    }
+    TouchSensor {
+      translation 1.62 -1 0.48
+      rotation 0 0 1 -1.5707953071795862
+      children [
+        Shape {
+          appearance USE BUMPER_APPEARANCE
+          geometry USE BUMPER_GEOMETRY_LARGE
+        }
+      ]
+      name "touch sensor right"
+      boundingObject USE BUMPER_GEOMETRY_LARGE
+    }
+    GPS {
+    }
+    Gyro {
+    }
+    InertialUnit {
+    }
+    Accelerometer {
+    }
+    Display {
+      width 200
+      height 150
+    }
+  ]
+}
+StraightRoadSegment {
+  translation 30 25 0.01
+  rotation 0 0 1 3.141593
+  name "reta_superior"
+  width 10
+  rightBarrier TRUE
+  leftBarrier TRUE
+  length 60
+  roadBoundingObject TRUE
+}
+CurvedRoadSegment {
+  translation -30 0 0.01
+  rotation 0 0 1 3.141593
+  name "curva_esquerda"
+  width 10
+  rightBarrier TRUE
+  leftBarrier TRUE
+  curvatureRadius 25
+  totalAngle 3.141593
+  roadBoundingObject TRUE
+}
+StraightRoadSegment {
+  translation -30 -25 0.01
+  name "reta_inferior"
+  width 10
+  length 60
+  roadBoundingObject TRUE
+}
+CurvedRoadSegment {
+  translation 30 0 0.01
+  name "curva_direita"
+  width 10
+  curvatureRadius 25
+  totalAngle 3.141593
+  roadBoundingObject TRUE
+}
+Solid {
+  translation -0.985678 -34.6166 2.5
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 70 5 5
+      }
+    }
+  ]
+  boundingObject USE WALL
+}
+Solid {
+  translation -46.9073 27.6349 2.5
+  rotation 0 0 1 0.582503
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 30 5 5
+      }
+    }
+  ]
+  name "solid(3)"
+  boundingObject USE WALL
+}
+Solid {
+  translation 45.804 -27.4822 2.5
+  rotation 0 0 1 0.582503
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 30 5 5
+      }
+    }
+  ]
+  name "solid(14)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -61.0575 8.19243 2.5
+  rotation 0 0 1 1.35481
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 30 5 5
+      }
+    }
+  ]
+  name "solid(5)"
+  boundingObject USE WALL
+}
+Solid {
+  translation 62.1835 -6.76292 2.5
+  rotation 0 0 1 1.35481
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 30 5 5
+      }
+    }
+  ]
+  name "solid(12)"
+  boundingObject USE WALL
+}
+Solid {
+  translation 58.5074 17.2192 2.5
+  rotation 0 0 1 2.06821
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 30 5 5
+      }
+    }
+  ]
+  name "solid(6)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -57.5553 -13.9065 2.5
+  rotation 0 0 1 2.06821
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 30 5 5
+      }
+    }
+  ]
+  name "solid(11)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -40.7188 -30.5811 2.5
+  rotation 0 0 1 2.74888
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 30 5 5
+      }
+    }
+  ]
+  name "solid(7)"
+  boundingObject USE WALL
+}
+Solid {
+  translation 45.9693 29.5089 2.5
+  rotation 0 0 1 2.74888
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 30 5 5
+      }
+    }
+  ]
+  name "solid(13)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -41.9259 10.3512 2.5
+  rotation 0 0 1 0.818112
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 15 5 5
+      }
+    }
+  ]
+  name "solid(8)"
+  boundingObject USE WALL
+}
+Solid {
+  translation 37.7756 -9.83153 2.5
+  rotation 0 0 1 0.608672
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 15 5 5
+      }
+    }
+  ]
+  name "solid(17)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -44.8173 -0.591733 2.5
+  rotation 0 0 1 1.50534
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 15 5 5
+      }
+    }
+  ]
+  name "solid(9)"
+  boundingObject USE WALL
+}
+Solid {
+  translation 41.1616 -0.605457 2.5
+  rotation 0 0 1 1.73441
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 15 5 5
+      }
+    }
+  ]
+  name "solid(16)"
+  boundingObject USE WALL
+}
+Solid {
+  translation 34.8944 10.9699 2.5
+  rotation 0 0 1 2.33001
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 15 5 5
+      }
+    }
+  ]
+  name "solid(10)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -40.4538 -9.84469 2.5
+  rotation 0 0 1 2.33001
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 15 5 5
+      }
+    }
+  ]
+  name "solid(15)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -1.69919 -13.6785 2.5
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 70 5 5
+      }
+    }
+  ]
+  name "solid(4)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -2.63258 33.7745 2.5
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 70 5 5
+      }
+    }
+  ]
+  name "solid(2)"
+  boundingObject USE WALL
+}
+Solid {
+  translation -3.71544 15.5694 2.5
+  children [
+    DEF WALL Shape {
+      appearance PBRAppearance {
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 70 5 5
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject USE WALL
+}
