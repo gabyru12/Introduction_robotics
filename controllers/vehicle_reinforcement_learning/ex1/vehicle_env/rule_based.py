@@ -398,7 +398,7 @@ class KeyboardController:
             k = self._kb.getKey()
         return pressed
 
-    def act(self, obs: Observation) -> tuple[float, float, float]:
+    def act(self, driver, obs: Observation) -> tuple[float, float, float]:
         """Return (steering, throttle, brake) from the current keyboard state.
 
         Args:
@@ -413,7 +413,15 @@ class KeyboardController:
 
         want_left  = bool(pressed & self._keys_left)
         want_right = bool(pressed & self._keys_right)
+
         if want_left and not want_right:
+            #car_node = driver.getFromDef("VEHICLE")
+            #vel = car_node.getVelocity()
+            #car_node.setVelocity([
+            #    vel[0], vel[1], vel[2],
+            #    vel[3], vel[4], 0.0
+            #])
+            #self._steer = min(1.0, self._steer + cfg.steer_increment)
             self._steer = max(-1.0, self._steer - cfg.steer_increment)
         elif want_right and not want_left:
             self._steer = min(1.0, self._steer + cfg.steer_increment)
@@ -433,6 +441,7 @@ class KeyboardController:
             return self._steer, 0.0, cfg.brake_intensity
         if want_fwd:
             return self._steer, cfg.throttle_pressed, 0.0
+
         return self._steer, 0.0, cfg.engine_brake
 
 

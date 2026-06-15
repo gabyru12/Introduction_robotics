@@ -42,7 +42,7 @@ TOUCH_NAME_LEFT = "touch sensor left"
 TOUCH_NAME_RIGHT = "touch sensor right"
 
 # Number of LiDAR rays to keep in the RL observation vector.
-RL_LIDAR_BINS = 32
+RL_LIDAR_BINS = 6
 
 @dataclass
 class Observation:

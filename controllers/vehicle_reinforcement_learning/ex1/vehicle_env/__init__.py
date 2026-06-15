@@ -114,10 +114,9 @@ class VehicleEnv(gym.Env):
         brake = float(action[2])
 
         obs = self.sensors.read(self.driver.getTime())
+        observation = self.sensors.to_rl_vector(obs)
         apply_action(self.driver, steer, throttle, brake, speed_ms=abs(obs.forward_speed))
         self.driver.step()
-
-        observation = self.sensors.to_rl_vector(obs)
 
         terminated = False
         truncated = False
@@ -125,6 +124,17 @@ class VehicleEnv(gym.Env):
         reward = 0
 
         # TODO: Compute better reward
+        # Reward should consider:
+        #   - higher velocity -> higher reward (should not be so high otherwise car will prefer to accelerate rather
+        #   than avoid hitting the wall or performing a drift)
+        #   - crash into wall -> receive penalty (should be high, this is very bad, and observation should have some
+        #   kinds of dangerously close to the wall detection and which direction that wall is)
+        #   - receive penalty for surpassing set threshold for getting dangerously close to the wall (might learn
+        #   faster than "crash into wall" penalty policy)
+        #   - give reward for progressing (to be explained)
+        #   - give reward for setting right steering wheel angle when approaching a curve (vehicle should understand
+        #   when it is right to turn left or right)
+        #   - drift -> much higher reward (must be during curve otherwise might want to drive the whole track)
         if obs.touch > 0:
             if self.resetting:
                 self.resetting = False

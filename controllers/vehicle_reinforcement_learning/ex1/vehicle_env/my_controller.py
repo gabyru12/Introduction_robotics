@@ -45,8 +45,8 @@ sys.excepthook = _excepthook
 
 import numpy as np
 from vehicle import Driver
-from .sensors import VehicleSensors
-from .rule_based import (
+from controllers.vehicle_reinforcement_learning.ex1.vehicle_env.sensors import VehicleSensors
+from controllers.vehicle_reinforcement_learning.ex1.vehicle_env.rule_based import (
     RuleBasedAgent, RuleBasedConfig,
     OvalRaceController, OvalRaceConfig,
     DriftDemoController, DriftDemoConfig,
@@ -64,7 +64,7 @@ POLICY = "keyboard"
 # Maximum physical steering angle of the BMW X5 PROTO (radians).
 # Webots' BmwX5.proto declares a maxSteeringAngle. We mirror it here so
 # our normalised steering in [-1, 1] maps to real radians.
-MAX_STEER_RAD = 0.8
+MAX_STEER_RAD = 1
 
 # Target speed that corresponds to throttle=1.0 (km/h).
 # The rule-based baseline uses setCruisingSpeed(throttle * CRUISING_SPEED_KMH).

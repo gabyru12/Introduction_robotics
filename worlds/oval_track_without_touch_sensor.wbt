@@ -9,7 +9,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/road/protos/StraightRoadSegment.proto"
 EXTERNPROTO "../protos/BmwX5.proto"
 
-DEF WORLD_INFO WorldInfo {
+WorldInfo {
   CFM 0.0001
   basicTimeStep 8
   lineScale 25
@@ -24,45 +24,30 @@ DEF WORLD_INFO WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.032853759185340115 0.9919492877761074 -0.12229979962316032 0.9627902038513988
-  position -74.6672075627317 -35.29727278866382 114.39849932919421
+  orientation -0.2899205398353815 0.6613881246654627 0.6917454944797714 1.1296465735039205
+  position -66.05324925143493 -70.32554412274004 102.43541267427882
   follow "vehicle"
-  followType "Mounted Shot"
+  followType "Pan and Tilt Shot"
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 Floor {
-  size 10000 10000
+  size 200 200
   appearance Parquetry {
     type "dark strip"
     colorOverride 0.3 0.7 0.6
   }
 }
 DEF VEHICLE BmwX5 {
-  translation -15.4 -28.07 0.419372
+  translation 0 -25 0.6
+  rotation -0.10043336045234315 -0.9949324770176791 0.004744078805774853 0.025275057569156573
   controller "<extern>"
   supervisor TRUE
   sensorsSlotFront [
     SickLms291 {
       translation 0.06 0 0
-    }
-    TouchSensor {
-      translation -0.05 0 0
-      children [
-        DEF BUMPER_SHAPE Shape {
-          appearance DEF BUMPER_APPEARANCE PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry DEF BUMPER_GEOMETRY Box {
-            size 0.1 1.5 0.1
-          }
-        }
-      ]
-      name "touch sensor front"
-      boundingObject USE BUMPER_GEOMETRY
     }
   ]
   sensorsSlotTop [
@@ -92,32 +77,6 @@ DEF VEHICLE BmwX5 {
     }
   ]
   sensorsSlotCenter [
-    TouchSensor {
-      translation 1.62 1 0.48
-      rotation 0 0 1 -1.5707953071795862
-      children [
-        Shape {
-          appearance USE BUMPER_APPEARANCE
-          geometry DEF BUMPER_GEOMETRY_LARGE Box {
-            size 0.1 4 0.1
-          }
-        }
-      ]
-      name "touch sensor left"
-      boundingObject USE BUMPER_GEOMETRY_LARGE
-    }
-    TouchSensor {
-      translation 1.62 -1 0.48
-      rotation 0 0 1 -1.5707953071795862
-      children [
-        Shape {
-          appearance USE BUMPER_APPEARANCE
-          geometry USE BUMPER_GEOMETRY_LARGE
-        }
-      ]
-      name "touch sensor right"
-      boundingObject USE BUMPER_GEOMETRY_LARGE
-    }
     GPS {
     }
     Gyro {
@@ -126,8 +85,6 @@ DEF VEHICLE BmwX5 {
     }
     Accelerometer {
     }
-    Compass {
-    }
     Display {
       width 200
       height 150
@@ -135,41 +92,33 @@ DEF VEHICLE BmwX5 {
   ]
 }
 StraightRoadSegment {
-  translation 30 25 -4
+  translation 30 25 0.01
   rotation 0 0 1 3.141593
   name "reta_superior"
   width 10
-  rightBorder FALSE
-  leftBorder FALSE
   length 60
   roadBoundingObject TRUE
 }
 CurvedRoadSegment {
-  translation -30 0 -4
+  translation -30 0 0.01
   rotation 0 0 1 3.141593
   name "curva_esquerda"
   width 10
-  rightBorder FALSE
-  leftBorder FALSE
   curvatureRadius 25
   totalAngle 3.141593
   roadBoundingObject TRUE
 }
 StraightRoadSegment {
-  translation -30 -25 -4
+  translation -30 -25 0.01
   name "reta_inferior"
   width 10
-  rightBorder FALSE
-  leftBorder FALSE
   length 60
   roadBoundingObject TRUE
 }
 CurvedRoadSegment {
-  translation 30 0 -4
+  translation 30 0 0.01
   name "curva_direita"
   width 10
-  rightBorder FALSE
-  leftBorder FALSE
   curvatureRadius 25
   totalAngle 3.141593
   roadBoundingObject TRUE

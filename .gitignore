@@ -1,0 +1,17 @@
+# .idea
+.idea
+
+# logs
+controllers/vehicle_reinforcement_learning/ex1/logs/
+controllers/vehicle_reinforcement_learning/ex1/vehicle_env/controller_crash.log
+
+# Webots generated files
+worlds/*.jpg
+worlds/*.wbproj
+
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
