@@ -204,7 +204,7 @@ Solid {
   translation 150 0 2.5
   rotation 1 0 0 1.57
   children [
-    Shape {
+    DEF ARENA Shape {
       geometry Mesh {
         url [
           "../protos/arena35raio.obj"
@@ -212,6 +212,7 @@ Solid {
       }
     }
   ]
+  boundingObject USE ARENA
 }
 Viewpoint {
   orientation 0.23205170528809682 -0.9101859961785984 -0.34309394986396735 5.0418631750990635
