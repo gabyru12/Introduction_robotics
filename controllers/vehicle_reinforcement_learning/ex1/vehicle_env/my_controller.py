@@ -46,7 +46,7 @@ sys.excepthook = _excepthook
 import numpy as np
 from vehicle import Driver
 from controllers.vehicle_reinforcement_learning.ex1.vehicle_env.sensors import VehicleSensors
-from controllers.vehicle_reinforcement_learning.ex1.vehicle_env.rule_based import (
+from controllers.vehicle_reinforcement_learning.ex1.vehicle_env.new_rule_based import (
     RuleBasedAgent, RuleBasedConfig,
     OvalRaceController, OvalRaceConfig,
     DriftDemoController, DriftDemoConfig,
@@ -122,6 +122,71 @@ def apply_action(driver: Driver, steering: float, throttle: float, brake: float,
 
     driver.setSteeringAngle(steering * MAX_STEER_RAD)
     
+    if brake > 0.1:
+        driver.setThrottle(0.0)
+        driver.setBrakeIntensity(brake)
+    else:
+        driver.setBrakeIntensity(0.0)
+        driver.setThrottle(throttle)
+
+        current_gear = driver.getGear()
+
+        gear_ratios = [0.0, 12.5, 8.0, 5.35, 4.3, 4.0]
+        wheel_radius = 0.36
+        if current_gear > 0 and current_gear < len(gear_ratios):
+            rpm = (speed_ms / wheel_radius) * gear_ratios[current_gear] * 60.0 / 6.2832
+        else:
+            rpm = 1000.0
+
+        # Cooldown entre mudanças: 0.5s mínimo entre transições para evitar hunting.
+        import time as _t
+        last_shift = getattr(apply_action, "_last_shift_t", 0.0)
+        can_shift = (_t.time() - last_shift) > 0.5
+
+        if current_gear == 0:
+            driver.setGear(1)
+            apply_action._last_shift_t = _t.time()
+        elif can_shift:
+            # Histerese: gap largo entre shift-up (5000) e shift-down (1500).
+            if rpm > 5000 and current_gear < 5:
+                driver.setGear(current_gear + 1)
+                apply_action._last_shift_t = _t.time()
+                prev = getattr(apply_action, "_prev_gear", -1)
+                if current_gear + 1 != prev:
+                    #print(f"[gear] UP to {current_gear + 1} (rpm={rpm:.0f}, speed_ms={speed_ms:.1f})", flush=True)
+                    apply_action._prev_gear = current_gear + 1
+            elif rpm < 1500 and current_gear > 1:
+                driver.setGear(current_gear - 1)
+                apply_action._last_shift_t = _t.time()
+                prev = getattr(apply_action, "_prev_gear", -1)
+                if current_gear - 1 != prev:
+                    #print(f"[gear] DOWN to {current_gear - 1} (rpm={rpm:.0f}, speed_ms={speed_ms:.1f})", flush=True)
+                    apply_action._prev_gear = current_gear - 1
+
+
+def apply_action2(driver: Driver, steering: float, throttle: float, brake: float, speed_ms: float = 0.0) -> None:
+    """Send a normalised action to the Webots Driver.
+
+    All three inputs are normalised:
+        steering: [-1, 1]  (left negative, right positive)
+        throttle: [ 0, 1]  (direct torque input via setThrottle)
+        brake:    [ 0, 1]
+
+    Uses setThrottle() + manual gear management so the internal PID of
+    setCruisingSpeed() does not fight against the oversteer needed for drift.
+    Gear shifts are triggered by RPM thresholds read from the Driver.
+    """
+    steering = max(-1.0, min(1.0, steering))
+    throttle = max(0.0, min(1.0, throttle))
+    brake = max(0.0, min(1.0, brake))
+
+    prev_steer = getattr(apply_action, "_prev_steer", 0.0)
+    alpha = 0.1
+    steering = prev_steer + alpha * (steering - prev_steer)
+    apply_action._prev_steer = steering
+
+    driver.setSteeringAngle(steering * MAX_STEER_RAD)
+
     if brake > 0.1:
         driver.setThrottle(0.0)
         driver.setBrakeIntensity(brake)

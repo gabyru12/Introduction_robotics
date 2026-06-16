@@ -37,9 +37,9 @@ CAMERA_NAME = "camera"
 COMPASS_NAME = None              # e.g. "compass"
 IMU_NAME = "inertial unit"       # required for proper heading
 ACCEL_NAME = "accelerometer"     # required for lateral accel feature
-TOUCH_NAME_FRONT = "touch sensor front"
-TOUCH_NAME_LEFT = "touch sensor left"
-TOUCH_NAME_RIGHT = "touch sensor right"
+TOUCH_NAME_FRONT = None
+TOUCH_NAME_LEFT = None
+TOUCH_NAME_RIGHT = None
 
 # Number of LiDAR rays to keep in the RL observation vector.
 RL_LIDAR_BINS = 6

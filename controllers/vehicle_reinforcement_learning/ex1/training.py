@@ -21,7 +21,7 @@ def main() -> None:
     eval_callback = EvalCallback(
         env,
         n_eval_episodes=5,
-        eval_freq=20000,
+        eval_freq=40000,
         best_model_save_path=base_dir + "/best_model",
         log_path=base_dir + "/eval_logs_results"
     )

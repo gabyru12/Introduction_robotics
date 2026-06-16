@@ -16,6 +16,9 @@ DEF WORLD_INFO WorldInfo {
   contactProperties [
     ContactProperties {
       material2 "BmwX5Wheels"
+      coulombFriction [
+        0.6
+      ]
       softCFM 0.0002
       bumpSound ""
       rollSound ""
@@ -24,8 +27,8 @@ DEF WORLD_INFO WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.032853759185340115 0.9919492877761074 -0.12229979962316032 0.9627902038513988
-  position -74.6672075627317 -35.29727278866382 114.39849932919421
+  orientation -0.1869425672685855 -0.19445015575168714 0.9629338572670372 4.591703485599076
+  position 255.24762440794288 211.78162935356184 96.35510990391194
   follow "vehicle"
   followType "Mounted Shot"
 }
@@ -41,7 +44,25 @@ Floor {
   }
 }
 DEF VEHICLE BmwX5 {
-  translation -15.4 -28.07 0.419372
+  hidden position_0_0 2.86741374758315e-17
+  hidden position2_0_0 310.6949529805863
+  hidden position_0_1 3.240180169399354e-17
+  hidden position2_0_1 345.9586127282644
+  hidden position_0_2 3011.5841957303746
+  hidden position_0_3 3018.7311001043186
+  hidden position_0_6 6.864173954005343e-08
+  hidden position_0_7 3.687254047690658e-09
+  hidden position_0_8 8.432873964045085e-07
+  hidden rotation_1 1.433706873791575e-17 1 2.3337170177179992e-18 3.464312378393002
+  hidden rotation_2 -1.620090084699677e-17 -1 8.346931011633605e-17 5.899764473792415
+  hidden rotation_3 0 1 0 4.344751715826877
+  hidden rotation_4 0 1 0 2.802152658117048
+  hidden rotation_28 0 -0.3205961743168832 0.9472159695726095 6.664001874625056e-08
+  hidden translation_29 -1.2595045006946748e-09 7.309996052917711e-09 -1.4137294668259415e-09
+  hidden translation_30 -1.901088291234032e-07 1.6725134253658958e-06 -2.133874631438104e-07
+  hidden rotation_30 0.7466598432279095 0 -0.6652060421485012 8.434636412909633e-07
+  translation -37.5967 -63.1804 0.317835
+  rotation 0.005258636760503344 -0.16810354048815837 0.9857553177207654 0.06344751956698334
   controller "<extern>"
   supervisor TRUE
   sensorsSlotFront [
@@ -175,72 +196,6 @@ CurvedRoadSegment {
   roadBoundingObject TRUE
 }
 Solid {
-  translation 0 -12.5 2.5
-  children [
-    DEF WALL Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry Box {
-        size 60 5 5
-      }
-    }
-  ]
-  name "solid(4)"
-  boundingObject USE WALL
-}
-Solid {
-  translation 0 12.5 2.5
-  children [
-    DEF WALL Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry Box {
-        size 60 5 5
-      }
-    }
-  ]
-  name "solid(1)"
-  boundingObject USE WALL
-}
-Solid {
-  translation -30 0 -1.67688e-12
-  children [
-    Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry DEF CYLINDER_GEOMETRY Cylinder {
-        height 10
-        radius 15
-      }
-    }
-  ]
-  name "solid(18)"
-  boundingObject USE CYLINDER_GEOMETRY
-}
-Solid {
-  translation 30 0 -1.67688e-12
-  children [
-    Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry DEF CYLINDER_GEOMETRY Cylinder {
-        height 10
-        radius 15
-      }
-    }
-  ]
-  name "solid(8)"
-  boundingObject USE CYLINDER_GEOMETRY
-}
-Solid {
   translation 0 -6.26279e-06 1.86
   rotation 1 0 0 1.5707996938995747
   children [
@@ -253,4 +208,75 @@ Solid {
     }
   ]
   boundingObject USE STADIUM
+}
+Solid {
+  children [
+    Solid {
+      translation 0 -12.5 2.5
+      children [
+        DEF WALL Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 60 5 5
+          }
+        }
+      ]
+      name "solid(4)"
+      boundingObject USE WALL
+    }
+    Solid {
+      translation 0 12.5 2.5
+      children [
+        DEF WALL Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 60 5 5
+          }
+        }
+      ]
+      name "solid(1)"
+      boundingObject USE WALL
+    }
+    Solid {
+      translation 30 0 -1.67688e-12
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry DEF CYLINDER_GEOMETRY Cylinder {
+            height 10
+            radius 15
+          }
+        }
+      ]
+      name "solid(8)"
+      boundingObject USE CYLINDER_GEOMETRY
+    }
+    Solid {
+      translation -30 0 -1.67688e-12
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry DEF CYLINDER_GEOMETRY Cylinder {
+            height 10
+            radius 15
+          }
+        }
+      ]
+      name "solid(18)"
+      boundingObject USE CYLINDER_GEOMETRY
+    }
+  ]
+  name "solid(2)"
 }
