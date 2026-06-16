@@ -1,4 +1,5 @@
 import time
+import os
 
 import gymnasium as gym
 from gymnasium.envs.registration import register
@@ -35,74 +36,28 @@ def arc_points(cx, cy, radius, start_angle, end_angle, n=100):
     return np.column_stack((x, y))
 
 
-def get_centerline():
-    # =====================================================
-    # Segment 1 (bottom straight)
-    # =====================================================
-    seg1 = line_points(
-        135, -25,
-        180, -25,
-        n=50
-    )
-
-    # =====================================================
-    # Segment 2 (right semicircle)
-    # center = (30, 0)
-    # radius = 25
-    # from bottom to top
-    # =====================================================
-    seg2 = arc_points(
-        cx=180,
-        cy=0,
-        radius=25,
-        start_angle=-np.pi/2,
-        end_angle=np.pi/2,
-        n=100
-    )
-
-    # =====================================================
-    # Segment 3 (top straight)
-    # =====================================================
-    seg3 = line_points(
-        180, 25,
-        120, 25,
-        n=100
-    )
-
-    # =====================================================
-    # Segment 4 (left semicircle)
-    # center = (-30, 0)
-    # radius = 25
-    # from top to bottom
-    # =====================================================
-    seg4 = arc_points(
-        cx=120,
-        cy=0,
-        radius=25,
-        start_angle=np.pi/2,
-        end_angle=3*np.pi/2,
-        n=100
-    )
-
-    # =====================================================
-    # Segment 5 (bottom straight)
-    # =====================================================
-    seg5 = line_points(
-        120, -25,
-        135, -25,
-        n=50
-    )
-
-    # =====================================================
-    # Complete centerline
-    # =====================================================
-    centerline = np.vstack([
-        seg1[:-1],
-        seg2[:-1],
-        seg3[:-1],
-        seg4[:-1],
-        seg5
-    ])
+def get_centerline(world_name):
+    center_x = 150
+    center_y = 0
+    if world_name == "village_winter_track":
+        seg1 = line_points(135, -25,180, -25,n=50)
+        seg2 = arc_points(cx=180,cy=0,radius=25,start_angle=-np.pi/2,end_angle=np.pi/2,n=100)
+        seg3 = line_points(180, 25,120, 25,n=100)
+        seg4 = arc_points(cx=120,cy=0,radius=25,start_angle=np.pi/2,end_angle=3*np.pi/2,n=100)
+        seg5 = line_points(120, -25,135, -25,n=50)
+        centerline = np.vstack([seg1[:-1],seg2[:-1],seg3[:-1],seg4[:-1],seg5])
+    elif world_name == "village_winter_circle_arena_35":
+        theta = np.linspace(0, 2 * np.pi, 400, endpoint=False)
+        centerline = np.column_stack([center_x + 25 * np.cos(theta), 25 * np.sin(theta)])
+    elif world_name == "village_winter_circle_arena_40":
+        theta = np.linspace(0, 2 * np.pi, 400, endpoint=False)
+        centerline = np.column_stack([center_x + 30 * np.cos(theta), 25 * np.sin(theta)])
+    elif world_name == "village_winter_circle_arena_45":
+        theta = np.linspace(0, 2 * np.pi, 400, endpoint=False)
+        centerline = np.column_stack([center_x + 35 * np.cos(theta), 35 * np.sin(theta)])
+    elif world_name == "village_winter_circle_arena_50":
+        theta = np.linspace(0, 2 * np.pi, 400, endpoint=False)
+        centerline = np.column_stack([center_x + 40 * np.cos(theta), 40 * np.sin(theta)])
 
     return centerline
 
@@ -318,12 +273,12 @@ def build_observation(
         ], dtype=np.float32),
         prev_action,
         np.array([
-            cruising_speed_norm,
+            cruising_speed,
             linear_velocity,
             lateral_velocity,
             drift_angle,
             dist2centerline_point,
-            yaw_rate_norm,
+            yaw_rate,
         ])
     ])
 
@@ -373,7 +328,8 @@ class VehicleEnv(gym.Env):
         #         break
 
         # TRACK
-        self.centerline = get_centerline()
+        self.world_name = os.path.basename(self.driver.getWorldPath())
+        self.centerline = get_centerline(self.world_name)
         self.comulative_progress = compute_centerline_s(self.centerline)
 
         # steering, throttle
@@ -459,24 +415,24 @@ class VehicleEnv(gym.Env):
         dist2centerline_point = obs[-2]
         x, y = self.vehicle_node.getField("translation").getSFVec3f()[:2]
 
-
         # TODO: Compute better reward
         v_front = self.touch_front.getValue()
         v_left = self.touch_left.getValue()
         v_right = self.touch_right.getValue()
         touch = float(max([v_front, v_left, v_right]))
-        if touch > 0:
-            if self.resetting:
-                self.resetting = False
-            else:
-                reward -= 100
-                terminated = True
-        elif dist2centerline_point >= 5:
-            reward -= 10
-            print("Penality")
-        else:
-            if x < 130 or x > 170:
-                if drift_angle > 30 and drift_angle < 60 and cruising_speed > 100:
+
+        if "arena" in self.world_name:
+            if touch > 0:
+                if self.resetting:
+                    self.resetting = False
+                else:
+                    reward -= 100
+                    terminated = True
+            elif dist2centerline_point >= 5:
+                reward -= 10
+                print("Penality")
+            elif cruising_speed > 100:
+                if drift_angle > 30 and drift_angle < 60:
                     print("Drift")
                     reward += 50
                 if drift_angle < 30 and drift_angle > -90 and steering < 0:
@@ -485,10 +441,31 @@ class VehicleEnv(gym.Env):
                 elif drift_angle > 60 and drift_angle < 90 and steering > 0:
                     print("Steering right to maintain drift")
                     reward += 10
-            if x > 130 and x < 170:
-                if abs(drift_angle) < 30 and cruising_speed > 30:
-                    print("Going straight")
-                    reward += 1
+        else:
+            if touch > 0:
+                if self.resetting:
+                    self.resetting = False
+                else:
+                    reward -= 100
+                    terminated = True
+            elif dist2centerline_point >= 5:
+                reward -= 10
+                print("Penality")
+            else:
+                if x < 130 or x > 170 and cruising_speed > 100:
+                    if drift_angle > 30 and drift_angle < 60:
+                        print("Drift")
+                        reward += 50
+                    if drift_angle < 30 and drift_angle > -90 and steering < 0:
+                        print("Steering left to drift")
+                        reward += 10
+                    elif drift_angle > 60 and drift_angle < 90 and steering > 0:
+                        print("Steering right to maintain drift")
+                        reward += 10
+                if x > 130 and x < 170:
+                    if abs(drift_angle) < 30 and cruising_speed > 30:
+                        print("Going straight")
+                        reward += 1
 
         self.reward_episode += reward
         self.num_timesteps += 1
