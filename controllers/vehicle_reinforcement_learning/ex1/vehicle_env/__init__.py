@@ -84,20 +84,23 @@ def compute_centerline_s(centerline):
     return s
 
 
-def facilitate_driving(driver, previous_easier_control):
+def facilitate_driving(driver, previous_easier_control, world_name):
     car_node = driver.getFromDef("VEHICLE")
     translation_field = car_node.getField("translation")
     x = translation_field.getSFVec3f()[0]
     just_turned_easier_control_on = False
     just_turned_easier_control_off = False
-    if x > 170 or x < 130:
-        if not previous_easier_control:
-            just_turned_easier_control_on = True
+    if "arena" in world_name:
         easier_control = True
     else:
-        if previous_easier_control:
-            just_turned_easier_control_off = True
-        easier_control = False
+        if x > 170 or x < 130:
+            if not previous_easier_control:
+                just_turned_easier_control_on = True
+            easier_control = True
+        else:
+            if previous_easier_control:
+                just_turned_easier_control_off = True
+            easier_control = False
 
     vel = car_node.getVelocity()
     if easier_control:
@@ -175,11 +178,13 @@ def build_observation(
     gps,
     compass,
     prev_action,
+    type,
     n_lidar_bins=12,
     MAX_CRUISING_SPEED=250.0,
-    MAX_LINEAR_VELOCITY=30.0,
+    MAX_LONGITUDINAL_VELOCITY=30.0,
     MAX_LATERAL_VELOCITY=30.0,
-    MAX_YAW_RATE=6.0,
+    MAX_LINEAR_VELOCITY=30.0,
+    MAX_YAW_RATE=1,
     MAX_STEER_ANGLE=1.0,
     MAX_CAR_HEADING_ANGLE=180,
     MAX_ROAD_HEADING_ANGLE=180,
@@ -205,6 +210,7 @@ def build_observation(
     # -----------------------------------------------------
     cruising_speed = driver.getCurrentSpeed()
     cruising_speed_norm = normalize_unsigned(abs(cruising_speed), MAX_CRUISING_SPEED)
+    throttle = driver.getThrottle()
     steering_angle = driver.getSteeringAngle()
     steering_norm = normalize_signed(steering_angle, MAX_STEER_ANGLE)
 
@@ -214,19 +220,21 @@ def build_observation(
     gps_velocity_vector = np.asarray(gps.getSpeedVector(), dtype=np.float32)
 
     # -----------------------------------------------------
-    # LINEAR VELOCITY & LATERAL VELOCITY
+    # LONGITUDINAL VELOCITY & LATERAL VELOCITY & LINEAR VELOCITY
     # -----------------------------------------------------
     north = compass.getValues()
     heading = math.atan2(-float(north[0]), float(north[1]))
     heading_unit = np.array([math.cos(heading), math.sin(heading), 0.0], dtype=np.float32)
     right_unit = np.array([-math.sin(heading), math.cos(heading), 0.0], dtype=np.float32)
-    linear_velocity = float(np.dot(gps_velocity_vector, heading_unit))
-    linear_velocity_norm = normalize_unsigned(linear_velocity, MAX_LINEAR_VELOCITY)
+    longitudinal_velocity = float(np.dot(gps_velocity_vector, heading_unit))
+    longitudinal_velocity_norm = normalize_unsigned(longitudinal_velocity, MAX_LONGITUDINAL_VELOCITY)
     lateral_velocity = float(np.dot(gps_velocity_vector, right_unit))
     lateral_velocity_norm = normalize_unsigned(lateral_velocity, MAX_LATERAL_VELOCITY)
+    linear_velocity = math.hypot(longitudinal_velocity, lateral_velocity)
+    linear_velocity_norm = normalize_unsigned(linear_velocity, MAX_LINEAR_VELOCITY)
 
     # -----------------------------------------------------
-    # DISTANCE TO CENTERLINE & DRIFT ANGLE
+    # DISTANCE TO CENTERLINE & DRIFT ANGLE & SLIP ANGLE
     # -----------------------------------------------------
     car_pos = driver.getFromDef("VEHICLE").getField("translation").getSFVec3f()
     idx, centerline_point, dist2_centerline_point = closest_centerline_point(car_pos[:2], centerline)
@@ -235,16 +243,24 @@ def build_observation(
     road_heading_unit = np.array([round(math.cos(road_heading),3), round(math.sin(road_heading),3), 0.0], dtype=np.float32)
 
     north = compass.getValues()
-    car_heading = -math.atan2(-float(north[0]), float(north[1]))
-    car_heading_unit = np.array([round(math.cos(car_heading),3), round(math.sin(car_heading),3), 0.0], dtype=np.float32)
+    car_heading_rad = -math.atan2(-float(north[0]), float(north[1]))
+    car_heading_unit = np.array([round(math.cos(car_heading_rad),3), round(math.sin(car_heading_rad),3), 0.0], dtype=np.float32)
 
-    drift_angle = int(_wrap_angle(car_heading - road_heading) * 180 / math.pi)
+    velocity_heading_rad = math.atan2(gps_velocity_vector[1], gps_velocity_vector[0])
+    slip_angle_rad = _wrap_angle(car_heading_rad - velocity_heading_rad)
+
+    heading_error_deg = int(_wrap_angle(car_heading_rad - road_heading) * 180 / math.pi)
     dist2centerline_point = dist2_centerline_point
-    car_heading = int(car_heading * 180 / math.pi)
-    road_heading = int(road_heading * 180 / math.pi)
-    car_heading_norm = normalize_signed(car_heading, MAX_CAR_HEADING_ANGLE)
-    road_heading_norm = normalize_signed(road_heading, MAX_ROAD_HEADING_ANGLE)
-    drift_angle_norm = normalize_signed(drift_angle, MAX_DRIFT_ANGLE)
+    car_heading_deg = int(car_heading_rad * 180 / math.pi)
+    road_heading_deg = int(road_heading * 180 / math.pi)
+    velocity_heading_deg = int(velocity_heading_rad * 180 / math.pi)
+    slip_angle_deg = int(slip_angle_rad * 180 / math.pi)
+
+    car_heading_norm = normalize_signed(car_heading_deg, MAX_CAR_HEADING_ANGLE)
+    road_heading_norm = normalize_signed(road_heading_deg, MAX_ROAD_HEADING_ANGLE)
+    velocity_heading_norm = normalize_signed(velocity_heading_deg, MAX_ROAD_HEADING_ANGLE)
+    heading_error_deg_norm = normalize_signed(heading_error_deg, MAX_DRIFT_ANGLE)
+    slip_angle_deg_norm = normalize_signed(slip_angle_deg, MAX_DRIFT_ANGLE)
     dist2centerline_point_norm = normalize_unsigned(dist2_centerline_point, MAX_DIS2CENTERLINE)
 
     # -----------------------------------------------------
@@ -259,29 +275,59 @@ def build_observation(
     # -----------------------------------------------------
     prev_action = np.asarray(prev_action, dtype=np.float32)
 
-    obs = np.concatenate([
-        lidar_norm,
-        np.array([
-            cruising_speed_norm,
-            steering_norm,
-            linear_velocity_norm,
-            lateral_velocity_norm,
-            yaw_rate_norm,
-            car_heading_norm,
-            road_heading_norm,
-            drift_angle_norm,
-            dist2centerline_point_norm,
-        ], dtype=np.float32),
-        prev_action,
-        np.array([
-            cruising_speed,
-            linear_velocity,
-            lateral_velocity,
-            drift_angle,
-            dist2centerline_point,
-            yaw_rate,
+    if type == "complex":
+        obs = np.concatenate([
+            lidar_norm,
+            np.array([
+                cruising_speed_norm,
+                steering_norm,
+                longitudinal_velocity_norm,
+                lateral_velocity_norm,
+                linear_velocity_norm,
+                yaw_rate_norm,
+                car_heading_norm,
+                road_heading_norm,
+                velocity_heading_norm,
+                heading_error_deg_norm,
+                slip_angle_deg_norm,
+                dist2centerline_point_norm,
+            ], dtype=np.float32),
+            prev_action,
+            np.array([
+                cruising_speed,
+                longitudinal_velocity,
+                lateral_velocity,
+                linear_velocity,
+                slip_angle_deg,
+                heading_error_deg,
+                dist2centerline_point,
+                yaw_rate,
+            ])
         ])
-    ])
+    elif type == "simple":
+        obs = np.concatenate([
+            np.array([
+                cruising_speed_norm,
+                throttle,
+                steering_norm,
+                longitudinal_velocity_norm,
+                lateral_velocity_norm,
+                linear_velocity_norm,
+                car_heading_norm,
+                velocity_heading_norm,
+                yaw_rate_norm,
+                slip_angle_deg_norm,
+            ], dtype=np.float32),
+            prev_action,
+            np.array([
+                cruising_speed,
+                longitudinal_velocity,
+                lateral_velocity,
+                linear_velocity,
+                slip_angle_deg_norm,
+                yaw_rate,
+            ])
+        ])
 
     return obs.astype(np.float32)
 
@@ -292,7 +338,7 @@ def build_observation(
 register(
     id="Vehicle-v0",
     entry_point="vehicle_env:VehicleEnv",
-    max_episode_steps=10000
+    max_episode_steps=2000
 )
 
 class VehicleEnv(gym.Env):
@@ -340,14 +386,21 @@ class VehicleEnv(gym.Env):
             dtype=np.float32
         )
 
-        # 12 for the lidar bins + 11 for the other sensors + 2 for the previous action
-        obs_size = 12 + 9 + 2
+        # 12 for the lidar bins + 12 for the other sensors + 2 for the previous action
+        obs_size = 12 + 12 + 2
 
         self.observation_space = gym.spaces.Box(
-            low=np.array([0.0]*12 + [0.0,-1.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,0.0,-1.0,0.0], dtype=np.float32),
+            low=np.array([0.0]*12 + [0.0,-1.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,-1.0,0.0],
+                         dtype=np.float32),
             high=np.array([1.0]*obs_size, dtype=np.float32),
             dtype=np.float32
         )
+        # self.observation_space = gym.spaces.Box(
+        #     low=np.array([0.0] * 12 + [0.0, -1.0, 0.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0, 0.0, -1.0, 0.0],
+        #                  dtype=np.float32),
+        #     high=np.array([1.0] * obs_size, dtype=np.float32),
+        #     dtype=np.float32
+        # )
 
         self.initial_vehicle_position = self.vehicle_node.getField("translation").getSFVec3f()
         self.initial_vehicle_orientation = self.vehicle_node.getField("rotation").getSFRotation()
@@ -385,7 +438,8 @@ class VehicleEnv(gym.Env):
         # Warp robot to initial position
         self.driver.step()
         self.full_warp_vehicle(self.initial_vehicle_position, self.initial_vehicle_orientation)
-        obs = build_observation(self.driver, self.centerline, self.lidar, self.gyro, self.gps, self.compass, self.prev_action)
+        obs = build_observation(driver=self.driver, centerline=self.centerline, lidar=self.lidar, gyro=self.gyro,
+                                 gps=self.gps, compass=self.compass,prev_action=self.prev_action, type="complex")
 
         print(f"Reward: {self.reward_episode} | Time: {round(self.num_timesteps*(self.timestep/1000), 2)}s")
         self.num_timesteps = 0
@@ -393,82 +447,79 @@ class VehicleEnv(gym.Env):
         self.num_epochs += 1
         self.resetting = True
 
-        return obs[:23], {}
+        return obs[:26], {}
 
+    def compute_reward(self, type = "complex", obs = None, steering=0.0, throttle=0.0):
+        if type == "complex":
+            terminated = False
+            truncated = False
+
+            reward = 0
+            cruising_speed = obs[-8]
+            slip_angle_deg = obs[-4]
+            heading_error_deg = obs[-3]
+
+            dist2centerline_point = obs[-2]
+            x, y = self.vehicle_node.getField("translation").getSFVec3f()[:2]
+
+            v_front = self.touch_front.getValue()
+            v_left = self.touch_left.getValue()
+            v_right = self.touch_right.getValue()
+            touch = float(max([v_front, v_left, v_right]))
+
+            if "arena" in self.world_name:
+                if touch > 0:
+                    if self.resetting:
+                        self.resetting = False
+                    else:
+                        reward -= 1000
+                        terminated = True
+                elif dist2centerline_point >= 5:
+                    reward -= 10
+                elif cruising_speed > 100:
+                    if heading_error_deg > 30 and heading_error_deg < 60:
+                        reward += 50
+                    if heading_error_deg < 30 and heading_error_deg > -90 and steering < 0:
+                        reward += 10
+                    elif heading_error_deg > 60 and heading_error_deg < 90 and steering > 0:
+                        reward += 10
+            else:
+                if touch > 0:
+                    if self.resetting:
+                        self.resetting = False
+                    else:
+                        reward -= 1000
+                        terminated = True
+                elif dist2centerline_point >= 5:
+                    reward -= 1
+                else:
+                    if x < 130 or x > 170:
+                        if slip_angle_deg > 30 and slip_angle_deg < 60:
+                            reward += 50
+                        if heading_error_deg > 30 and heading_error_deg < 60:
+                            reward += 50
+                    if x > 130 and x < 170:
+                        if abs(slip_angle_deg) < 10 and cruising_speed > 10:
+                            reward += 1
+
+        return reward, terminated, truncated
 
     def step(self, action):
         steering = float(action[0])
         throttle = float(action[1])
 
-        obs = build_observation(self.driver, self.centerline, self.lidar, self.gyro, self.gps, self.compass, self.prev_action)
+        obs = build_observation(driver=self.driver, centerline=self.centerline, lidar=self.lidar, gyro=self.gyro,
+                                gps=self.gps, compass=self.compass, prev_action=self.prev_action, type="complex")
         apply_action(self.driver, steering, throttle, 0.0, speed_ms=abs(self.driver.getCurrentSpeed()))
         self.prev_action = np.array([steering, throttle], dtype=np.float32)
-        self.previous_easier_control = facilitate_driving(self.driver, self.previous_easier_control)
+        self.previous_easier_control = facilitate_driving(self.driver, self.previous_easier_control, self.world_name)
         self.driver.step()
 
-        terminated = False
-        truncated = False
-
-        reward = 0
-        cruising_speed = obs[-6]
-        linear_velocity = obs[-5]
-        drift_angle = obs[-3]
-        dist2centerline_point = obs[-2]
-        x, y = self.vehicle_node.getField("translation").getSFVec3f()[:2]
-
-        # TODO: Compute better reward
-        v_front = self.touch_front.getValue()
-        v_left = self.touch_left.getValue()
-        v_right = self.touch_right.getValue()
-        touch = float(max([v_front, v_left, v_right]))
-
-        if "arena" in self.world_name:
-            if touch > 0:
-                if self.resetting:
-                    self.resetting = False
-                else:
-                    reward -= 100
-                    terminated = True
-            elif dist2centerline_point >= 5:
-                reward -= 10
-                print("Penality")
-            elif cruising_speed > 100:
-                if drift_angle > 30 and drift_angle < 60:
-                    print("Drift")
-                    reward += 50
-                if drift_angle < 30 and drift_angle > -90 and steering < 0:
-                    print("Steering left to drift")
-                    reward += 10
-                elif drift_angle > 60 and drift_angle < 90 and steering > 0:
-                    print("Steering right to maintain drift")
-                    reward += 10
-        else:
-            if touch > 0:
-                if self.resetting:
-                    self.resetting = False
-                else:
-                    reward -= 100
-                    terminated = True
-            elif dist2centerline_point >= 5:
-                reward -= 10
-                print("Penality")
-            else:
-                if x < 130 or x > 170 and cruising_speed > 100:
-                    if drift_angle > 30 and drift_angle < 60:
-                        print("Drift")
-                        reward += 50
-                    if drift_angle < 30 and drift_angle > -90 and steering < 0:
-                        print("Steering left to drift")
-                        reward += 10
-                    elif drift_angle > 60 and drift_angle < 90 and steering > 0:
-                        print("Steering right to maintain drift")
-                        reward += 10
-                if x > 130 and x < 170:
-                    if abs(drift_angle) < 30 and cruising_speed > 30:
-                        print("Going straight")
-                        reward += 1
+        reward, terminated, truncated = self.compute_reward(type="complex", obs=obs, steering=steering,
+                                                           throttle=throttle)
+        #reward, terminated, truncated = self.compute_reward(type="simple", obs=obs, steering=steering, throttle=throttle)
 
         self.reward_episode += reward
         self.num_timesteps += 1
 
-        return (obs[:23], reward, terminated, truncated, {})
+        return (obs[:26], reward, terminated, truncated, {})

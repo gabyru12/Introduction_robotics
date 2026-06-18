@@ -415,13 +415,6 @@ class KeyboardController:
         want_right = bool(pressed & self._keys_right)
 
         if want_left and not want_right:
-            #car_node = driver.getFromDef("VEHICLE")
-            #vel = car_node.getVelocity()
-            #car_node.setVelocity([
-            #    vel[0], vel[1], vel[2],
-            #    vel[3], vel[4], 0.0
-            #])
-            #self._steer = min(1.0, self._steer + cfg.steer_increment)
             self._steer = max(-1.0, self._steer - cfg.steer_increment)
         elif want_right and not want_left:
             self._steer = min(1.0, self._steer + cfg.steer_increment)

@@ -6,8 +6,7 @@ from stable_baselines3 import PPO
 def main() -> None:
     base_dir: str = os.path.join(os.getcwd(), "logs")
     # Change to the .zip file of your own model!
-    #model = PPO.load(base_dir + "/best_model/best_model.zip")
-    model = PPO.load("vehicle_ppo")
+    model = PPO.load(base_dir + "/best_model/best_model.zip")
     env = gym.make("Vehicle-v0")
 
     obs, _info = env.reset() # reset the environment

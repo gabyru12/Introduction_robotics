@@ -14,6 +14,7 @@ WorldInfo {
     "World generated using the Open Street Map to Webots importer"
   ]
   CFM 0.0001
+  basicTimeStep 8
   lineScale 25
   contactProperties [
     ContactProperties {
@@ -264,8 +265,8 @@ Solid {
   boundingObject USE CYLINDER_GEOMETRY
 }
 Viewpoint {
-  orientation 0.22111465974743433 -0.8013999212927422 -0.5557575671070641 5.400785311137677
-  position 76.8068201684524 -46.89075337801774 56.977657846551665
+  orientation 0.1972006968408304 -0.9597685066570566 -0.19989071713007198 4.7280255984065915
+  position 141.9677067491534 -27.15697966522381 123.46571085937867
   near 10
   follow "vehicle"
   followType "None"

@@ -215,11 +215,10 @@ Solid {
   boundingObject USE ARENA
 }
 Viewpoint {
-  orientation 0.23997102669627207 -0.9034123888545961 -0.3553307783043412 5.034878578928748
-  position 95.31949250388979 -49.12262257197345 182.41410770335716
+  orientation 0.2555433532022558 0.28893868296078695 -0.9226115282842683 1.560590525308427
+  position 200.19448252949755 -185.99914545183486 49.33507872803883
   near 10
   follow "vehicle"
-  followType "None"
 }
 TexturedBackground {
   texture "dusk"
@@ -228,8 +227,8 @@ TexturedBackgroundLight {
   texture "dusk"
 }
 DEF VEHICLE BmwX5 {
-  translation 150 -40 0.3
-  rotation 0 0 -1 0
+  translation 212.139 -255.163 0.306531
+  rotation 2.0780192890229164e-05 -2.07917515563148e-05 -0.9999999995679434 1.5707967598892756
   controller "<extern>"
   supervisor TRUE
   sensorsSlotFront [
@@ -292,7 +291,7 @@ DEF VEHICLE BmwX5 {
     }
     TouchSensor {
       translation 1.62 1 0.48
-      rotation 0 0 1 -1.5707953071795862
+      rotation 0 0 -0.9999999999999999 1.5707953071795862
       children [
         Shape {
           appearance USE BUMPER_APPEARANCE

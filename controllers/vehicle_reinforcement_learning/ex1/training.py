@@ -4,6 +4,7 @@ import time
 import gymnasium as gym
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import EvalCallback
+from stable_baselines3.common.callbacks import CheckpointCallback
 
 import controllers.vehicle_reinforcement_learning.ex1.vehicle_env
 
@@ -25,11 +26,16 @@ def main() -> None:
         best_model_save_path=base_dir + "/best_model",
         log_path=base_dir + "/eval_logs_results"
     )
+    checkpoint_callback = CheckpointCallback(
+        save_freq=10000,
+        save_path="./logs/checkpoints/",
+        name_prefix="ppo_vehicle"
+    )
     model.learn(
         total_timesteps=10000000 * 50000,
         log_interval=10,
         tb_log_name=time_str,
-        callback=eval_callback
+        callback=[eval_callback, checkpoint_callback]
     )
 
 if __name__ == '__main__':

@@ -45,8 +45,8 @@ sys.excepthook = _excepthook
 
 import numpy as np
 from vehicle import Driver
-from sensors import VehicleSensors
-from rule_based import (
+from controllers.vehicle_reinforcement_learning.ex1.vehicle_env.sensors import VehicleSensors
+from controllers.vehicle_reinforcement_learning.ex1.vehicle_env.new_rule_based import (
     RuleBasedAgent, RuleBasedConfig,
     OvalRaceController, OvalRaceConfig,
     DriftDemoController, DriftDemoConfig,
@@ -64,7 +64,7 @@ POLICY = "keyboard"
 # Maximum physical steering angle of the BMW X5 PROTO (radians).
 # Webots' BmwX5.proto declares a maxSteeringAngle. We mirror it here so
 # our normalised steering in [-1, 1] maps to real radians.
-MAX_STEER_RAD = 0.8
+MAX_STEER_RAD = 1
 
 # Target speed that corresponds to throttle=1.0 (km/h).
 # The rule-based baseline uses setCruisingSpeed(throttle * CRUISING_SPEED_KMH).
@@ -99,7 +99,9 @@ def build_agent(name: str, keyboard=None):
     raise ValueError(f"Unknown policy: {name!r}")
 
 
-def apply_action(driver: Driver, steering: float, throttle: float, brake: float, speed_ms: float = 0.0) -> None:
+def apply_action(driver: Driver, steering: float, throttle: float, brake: float, speed_ms: float = 0.0,
+                 max_steering_angle = 1.0) -> \
+        None:
     """Send a normalised action to the Webots Driver.
 
     All three inputs are normalised:
@@ -113,15 +115,15 @@ def apply_action(driver: Driver, steering: float, throttle: float, brake: float,
     """
     steering = max(-1.0, min(1.0, steering))
     throttle = max(0.0, min(1.0, throttle))
-    brake    = max(0.0, min(1.0, brake))
+    brake = max(0.0, min(1.0, brake))
 
     prev_steer = getattr(apply_action, "_prev_steer", 0.0)
     alpha = 0.1
     steering = prev_steer + alpha * (steering - prev_steer)
     apply_action._prev_steer = steering
 
-    driver.setSteeringAngle(steering * MAX_STEER_RAD)
-    
+    driver.setSteeringAngle(steering * max_steering_angle)
+
     if brake > 0.1:
         driver.setThrottle(0.0)
         driver.setBrakeIntensity(brake)
