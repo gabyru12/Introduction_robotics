@@ -14,6 +14,7 @@ WorldInfo {
     "World generated using the Open Street Map to Webots importer"
   ]
   CFM 0.0001
+  basicTimeStep 8
   lineScale 25
   contactProperties [
     ContactProperties {
@@ -183,40 +184,9 @@ WorldInfo {
     }
   ]
 }
-Solid {
-  translation 150 0 0
-  children [
-    Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry DEF CYLINDER_GEOMETRY Cylinder {
-        height 10
-        radius 30
-      }
-    }
-  ]
-  name "solid(18)"
-  boundingObject USE CYLINDER_GEOMETRY
-}
-Solid {
-  translation 150 0 2.5
-  rotation 1 0 0 1.57
-  children [
-    DEF ARENA Shape {
-      geometry Mesh {
-        url [
-          "../protos/arena50raio.obj"
-        ]
-      }
-    }
-  ]
-  boundingObject USE ARENA
-}
 Viewpoint {
-  orientation 0.2555433532022558 0.28893868296078695 -0.9226115282842683 1.560590525308427
-  position 200.19448252949755 -185.99914545183486 49.33507872803883
+  orientation 0.4807473167782187 0.6961917114815898 -0.533103290437114 1.8439216119138868
+  position 196.02168506278738 -198.25951290180808 553.8936516415763
   near 10
   follow "vehicle"
 }
@@ -228,7 +198,7 @@ TexturedBackgroundLight {
 }
 DEF VEHICLE BmwX5 {
   translation 212.139 -255.163 0.306531
-  rotation 2.0780192890229164e-05 -2.07917515563148e-05 -0.9999999995679434 1.5707967598892756
+  rotation -2.079179999101674e-05 -2.0780199991021757e-05 0.9999999995679423 1.5708
   controller "<extern>"
   supervisor TRUE
   sensorsSlotFront [
@@ -1229,52 +1199,6 @@ Road {
   contactMaterial "low_snow"
 }
 Road {
-  translation 341.45309 -101.748 0.01
-  rotation 0 0 1 3.141592653589793
-  name "road(31)"
-  id "-2090"
-  startJunction "-1272"
-  numberOfForwardLanes 2
-  speedLimit 25
-  roadBorderHeight 0.5
-  roadBorderWidth [
-    0.5
-  ]
-  bottom TRUE
-  wayPoints [
-    0 0 0
-    -21.437571 -2.70542 0
-    -59.679294 -13.271967 0
-    -78.336823 -51.934372 0
-    -84.751733 -90.961939 0
-    -83.796914 -137.23347 0
-    -53.222773 -168.58293 0
-    9.214729 -188.00374 6
-    67.719782 -182.72277 6
-    118.06296 -177.19875 6
-    146.68137 -172.88392 6
-    182.1311 -173.94025 6
-    218.76121 -190.75949 6
-    259.045 -223.41501 6
-    279.28286 -246.02473 0
-    303.94852 -284.56259 0
-    324.89843 -354.97724 0
-    348.32525 -455.00525 0
-    354.57734 -577.69871 0
-    363.04832 -736.8786 0
-    369.6989 -846.33886 0
-  ]
-  startingAngle [
-    3.01611
-  ]
-  splineSubdivision 2
-  appearance USE ROAD_WITH_SNOW
-  roadBoundingObject TRUE
-  rightBorderBoundingObject TRUE
-  leftBorderBoundingObject TRUE
-  castShadows TRUE
-}
-Road {
   translation 259.68914 -467.12821 0.01
   rotation 0 0 1 3.141592653589793
   name "road(32)"
@@ -1366,44 +1290,6 @@ Road {
   ]
   splineSubdivision 0
   appearance USE ROAD_WITH_SNOW
-}
-Road {
-  translation 190.30937 -543.59007 0.01
-  rotation 0 0 1 3.141592653589793
-  name "road(35)"
-  id "-2052"
-  startJunction "-792"
-  endJunction "-462"
-  speedLimit 5.55556
-  lines [
-    RoadLine {
-      type "none"
-    }
-  ]
-  roadBorderHeight -6
-  roadBorderWidth []
-  bottom TRUE
-  wayPoints [
-    0 0 0
-    9.117192 4.99764 0
-    18.946256 9.463539 0
-    30.782748 15.524973 0
-    47.457424 16.702254 0
-    68.641896 18.790068 4
-    80.440665 23.119888 5
-  ]
-  startingAngle [
-    5.78188
-  ]
-  endingAngle [
-    -0.351714
-  ]
-  splineSubdivision 1
-  appearance USE ROAD_WITH_SNOW
-  roadBoundingObject TRUE
-  rightBorderBoundingObject TRUE
-  leftBorderBoundingObject TRUE
-  castShadows TRUE
 }
 Road {
   translation 31.11591 -11.590181 0.01
@@ -1555,41 +1441,6 @@ Road {
   appearance USE ROAD_WITH_SNOW
 }
 Road {
-  translation 330.45593 -101.85778 0.01
-  rotation 0 0 1 3.141592653589793
-  name "road(40)"
-  id "-1984"
-  startJunction "-1272"
-  endJunction "-106"
-  speedLimit 13.8889
-  lines [
-    RoadLine {
-      type "none"
-    }
-  ]
-  roadBorderHeight -6
-  roadBorderWidth []
-  wayPoints [
-    0 0 0
-    47.364315 -2.65935 0
-    70.937558 4.789959 0
-    78.582099 16.561411 4
-    81.533888 19.982286 5
-  ]
-  startingAngle [
-    0.056088
-  ]
-  endingAngle [
-    -0.858875
-  ]
-  splineSubdivision 2
-  appearance USE ROAD_WITH_SNOW
-  roadBoundingObject TRUE
-  rightBorderBoundingObject TRUE
-  leftBorderBoundingObject TRUE
-  castShadows TRUE
-}
-Road {
   translation 229.9198 -595.9422 0.01
   rotation 0 0 1 3.141592653589793
   name "road(41)"
@@ -1619,163 +1470,6 @@ Road {
   ]
   splineSubdivision 0
   appearance USE ROAD_WITH_SNOW
-}
-Road {
-  translation 241.66582 -132.81822 0.01
-  rotation 0 0 1 3.141592653589793
-  name "road(42)"
-  id "-1978"
-  startJunction "-104"
-  endJunction "-732"
-  speedLimit 13.8889
-  lines [
-    RoadLine {
-      type "none"
-    }
-  ]
-  roadBorderHeight -6
-  roadBorderWidth []
-  wayPoints [
-    0 0 5
-    4.454542 7.699132 3.8
-    12.460392 21.801073 0
-    12.941247 32.134626 0
-    9.849999 41.266702 0
-  ]
-  startingAngle [
-    -1.04628
-  ]
-  endingAngle [
-    4.38599
-  ]
-  splineSubdivision 0
-  appearance USE ROAD_WITH_SNOW
-  roadBoundingObject TRUE
-  rightBorderBoundingObject TRUE
-  leftBorderBoundingObject TRUE
-  castShadows TRUE
-}
-Road {
-  translation 248.92204 -121.84006 5.01
-  rotation 0 0 1 3.141592653589793
-  name "road(43)"
-  id "-1976"
-  startJunction "-106"
-  endJunction "-104"
-  speedLimit 13.8889
-  lines [
-    RoadLine {
-      type "none"
-    }
-  ]
-  roadBorderHeight 0
-  roadBorderWidth [
-    0.5
-  ]
-  rightBarrier TRUE
-  leftBarrier TRUE
-  bottom TRUE
-  wayPoints [
-    0 0 0
-    3.717714 5.229256 0
-    7.256225 10.978157 0
-  ]
-  startingAngle [
-    -0.858875
-  ]
-  endingAngle [
-    -1.04628
-  ]
-  splineSubdivision 0
-  appearance USE ROAD_WITH_SNOW
-  pavementAppearance PBRAppearance {
-    baseColorMap ImageTexture {
-      url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/default/worlds/textures/asphalt.jpg"
-      ]
-    }
-    roughness 0.8
-    metalness 0
-  }
-  roadBoundingObject TRUE
-  castShadows TRUE
-}
-Road {
-  translation 109.86871 -566.70996 5.01
-  rotation 0 0 1 3.141592653589793
-  name "road(44)"
-  id "-1974"
-  startJunction "-462"
-  endJunction "-460"
-  speedLimit 27.7778
-  lines [
-    RoadLine {
-      type "none"
-    }
-  ]
-  roadBorderHeight 0
-  roadBorderWidth [
-    0.5
-  ]
-  rightBarrier TRUE
-  leftBarrier TRUE
-  bottom TRUE
-  wayPoints [
-    0 0 0
-    16.514747 5.944757 0
-  ]
-  startingAngle [
-    -0.351714
-  ]
-  endingAngle [
-    -0.345526
-  ]
-  splineSubdivision 2
-  appearance USE ROAD_WITH_SNOW
-  pavementAppearance PBRAppearance {
-    baseColorMap ImageTexture {
-      url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/default/worlds/textures/asphalt.jpg"
-      ]
-    }
-    roughness 0.8
-    metalness 0
-  }
-  roadBoundingObject TRUE
-  castShadows TRUE
-}
-Road {
-  translation 93.35396 -572.65472 0.01
-  rotation 0 0 1 3.141592653589793
-  name "road(45)"
-  id "-1972"
-  startJunction "-460"
-  speedLimit 27.7778
-  lines [
-    RoadLine {
-      type "none"
-    }
-  ]
-  roadBorderHeight -6
-  roadBorderWidth []
-  wayPoints [
-    0 0 5
-    13.052049 7.218931 4
-    26.034121 12.098618 1
-    41.738468 10.458298 0
-    49.992833 -6.177621 0
-    50.173559 -19.645461 0
-    61.587467 -28.18127 0
-  ]
-  startingAngle [
-    -0.345526
-  ]
-  splineSubdivision 2
-  appearance USE ROAD_WITH_SNOW
-  roadBoundingObject TRUE
-  rightBorderBoundingObject TRUE
-  leftBorderBoundingObject TRUE
-  castShadows TRUE
 }
 Road {
   translation 164.62808 -464.65099 0.01
@@ -1994,7 +1688,7 @@ Road {
   appearance USE ROAD_WITH_SNOW
 }
 Road {
-  translation 338.2651 -106.19086 0.01
+  translation 352.146 -104.649 0.01
   rotation 0 0 1 3.141592653589793
   name "road(53)"
   id "-2042_3"
@@ -2024,6 +1718,865 @@ Road {
   ]
   splineSubdivision 0
   appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 292.731 -74.4745 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(31)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 162.127 -29.9904 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(35)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 253.53 178.21 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(82)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 176.41 178.21 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(83)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 70.42 178.21 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(84)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation -21.21 178.21 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(86)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation -127.73 178.21 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(87)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 70.42 178.21 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(85)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation -67.1223 45.0737 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(42)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation -153.897 69.2296 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(45)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation -48.5689 -173.218 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(69)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 38.6651 -193.573 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(71)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 114.849 -216.259 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(72)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 187.025 -231.075 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(73)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 255.134 -235.392 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(74)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 328.307 -242.436 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(75)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 328.307 -453.436 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(76)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 237.717 -453.436 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(77)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 137.067 -453.436 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(78)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 49.767 -453.436 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(79)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation -35.953 -453.436 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(80)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation -147.233 -453.436 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(81)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation -122.131 -154.085 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(70)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 8.09046 25.5572 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(44)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 91.5382 4.54283 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(43)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
+}
+Road {
+  translation 230.132 -54.4895 0.01
+  rotation 0 0 1 3.141592653589793
+  name "road(40)"
+  id "-2042_3"
+  startJunction "-1272"
+  endJunction "-1270"
+  speedLimit 13.8889
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+  wayPoints [
+    0 0 0
+    -11.506875 56.650298 0
+    -22.649788 93.859839 0
+    -28.552708 150.22975 0
+    -15.098958 170.90077 0
+    -1.33345 183.08657 0
+  ]
+  startingAngle [
+    4.51199
+  ]
+  endingAngle [
+    5.55864
+  ]
+  splineSubdivision 0
+  appearance USE ROAD_WITH_SNOW
+  locked FALSE
 }
 Road {
   translation 241.85358 -322.88606 0.01

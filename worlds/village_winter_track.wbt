@@ -265,8 +265,8 @@ Solid {
   boundingObject USE CYLINDER_GEOMETRY
 }
 Viewpoint {
-  orientation 0.1972006968408304 -0.9597685066570566 -0.19989071713007198 4.7280255984065915
-  position 141.9677067491534 -27.15697966522381 123.46571085937867
+  orientation 0.3463046092447271 -0.6712634552822279 -0.6553460850714081 4.973817961955497
+  position 106.20278065372412 -65.31891223057964 73.24150707060308
   near 10
   follow "vehicle"
   followType "None"
@@ -300,6 +300,22 @@ DEF VEHICLE BmwX5 {
         }
       ]
       name "touch sensor front"
+      boundingObject USE BUMPER_GEOMETRY
+    }
+    TouchSensor {
+      translation -4.83 0 0
+      children [
+        DEF BUMPER_SHAPE Shape {
+          appearance DEF BUMPER_APPEARANCE PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BUMPER_GEOMETRY Box {
+            size 0.1 1.5 0.1
+          }
+        }
+      ]
+      name "touch sensor rear"
       boundingObject USE BUMPER_GEOMETRY
     }
   ]

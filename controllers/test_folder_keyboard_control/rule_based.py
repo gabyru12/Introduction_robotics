@@ -18,8 +18,6 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from sensors import Observation
-
 try:
     from controller import Keyboard as _Keyboard
 except ImportError:
