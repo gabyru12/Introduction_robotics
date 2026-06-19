@@ -41,23 +41,14 @@ def get_centerline(world_name):
     center_x = 150
     center_y = 0
     centerline = None
-    if world_name == "village_winter_track.wbt":
+    if world_name == "track.wbt":
         seg1 = line_points(135, -25,180, -25,n=50)
         seg2 = arc_points(cx=180,cy=0,radius=25,start_angle=-np.pi/2,end_angle=np.pi/2,n=100)
         seg3 = line_points(180, 25,120, 25,n=100)
         seg4 = arc_points(cx=120,cy=0,radius=25,start_angle=np.pi/2,end_angle=3*np.pi/2,n=100)
         seg5 = line_points(120, -25,135, -25,n=50)
         centerline = np.vstack([seg1[:-1],seg2[:-1],seg3[:-1],seg4[:-1],seg5])
-    elif world_name == "village_winter_circle_arena_35.wbt":
-        theta = np.linspace(0, 2 * np.pi, 400, endpoint=False)
-        centerline = np.column_stack([center_x + 25 * np.cos(theta), 25 * np.sin(theta)])
-    elif world_name == "village_winter_circle_arena_40.wbt":
-        theta = np.linspace(0, 2 * np.pi, 400, endpoint=False)
-        centerline = np.column_stack([center_x + 30 * np.cos(theta), 25 * np.sin(theta)])
-    elif world_name == "village_winter_circle_arena_45.wbt":
-        theta = np.linspace(0, 2 * np.pi, 400, endpoint=False)
-        centerline = np.column_stack([center_x + 35 * np.cos(theta), 35 * np.sin(theta)])
-    elif world_name == "village_winter_circle_arena_50.wbt":
+    elif world_name == "arena.wbt":
         theta = np.linspace(0, 2 * np.pi, 400, endpoint=False)
         centerline = np.column_stack([center_x + 40 * np.cos(theta), 40 * np.sin(theta)])
 
@@ -509,7 +500,7 @@ class VehicleEnv(gym.Env):
         self.driver.step()
         self.full_warp_vehicle(self.initial_vehicle_position, self.initial_vehicle_orientation)
         obs = build_observation(driver=self.driver, centerline=self.centerline, lidar=self.lidar, gyro=self.gyro,
-                                 gps=self.gps, compass=self.compass,prev_action=self.prev_action, type=self.type)
+                                 gps=self.gps, compass=self.compass,prev_action=self.prev_action)
 
         print(f"Reward: {self.reward_episode} | Time: {round(self.episode_num_timesteps*(self.timestep/1000), 2)}s")
         self.episode_num_timesteps = 0
@@ -654,7 +645,7 @@ class VehicleEnv(gym.Env):
         self.driver.step()
 
         obs = build_observation(driver=self.driver, centerline=self.centerline, lidar=self.lidar, gyro=self.gyro,
-                                gps=self.gps, compass=self.compass, prev_action=self.prev_action, type=self.type)
+                                gps=self.gps, compass=self.compass, prev_action=self.prev_action)
 
         self.prev_action = np.array([steering, throttle], dtype=np.float32)
 

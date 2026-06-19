@@ -11,7 +11,7 @@ import controllers.vehicle_reinforcement_learning.ex1.vehicle_env
 MODE = "train"
 time_str: str = time.strftime("%Y%m%d-%H%M%S")
 OTHER_LOGS_FILENAME = f"other_logs_{time_str}.json"
-learn_new = False
+learn_new = True
 
 def main() -> None:
     base_dir: str = os.path.join(os.getcwd(), "logs")
