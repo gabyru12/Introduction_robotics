@@ -185,53 +185,7 @@ WorldInfo {
   ]
 }
 Solid {
-  translation 150 0 2.5
-  rotation 1 0 0 1.5707996938995747
-  children [
-    DEF STADIUM Shape {
-      geometry Mesh {
-        url [
-          "../protos/track_border.obj"
-        ]
-      }
-    }
-  ]
-  boundingObject USE STADIUM
-}
-Solid {
-  translation 150 -12.5 2.5
-  children [
-    DEF WALL Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry Box {
-        size 60 5 5
-      }
-    }
-  ]
-  name "solid(4)"
-  boundingObject USE WALL
-}
-Solid {
-  translation 150 12.5 2.5
-  children [
-    DEF WALL Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry Box {
-        size 60 5 5
-      }
-    }
-  ]
-  name "solid(1)"
-  boundingObject USE WALL
-}
-Solid {
-  translation 120 0 -1.67688e-12
+  translation 150 0 0
   children [
     Shape {
       appearance PBRAppearance {
@@ -240,7 +194,7 @@ Solid {
       }
       geometry DEF CYLINDER_GEOMETRY Cylinder {
         height 10
-        radius 15
+        radius 30
       }
     }
   ]
@@ -248,26 +202,24 @@ Solid {
   boundingObject USE CYLINDER_GEOMETRY
 }
 Solid {
-  translation 180 0 -1.67688e-12
+  translation 150 0 2.5
+  rotation 1 0 0 1.57
   children [
-    Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry DEF CYLINDER_GEOMETRY Cylinder {
-        height 10
-        radius 15
+    DEF ARENA Shape {
+      geometry Mesh {
+        url [
+          "../protos/arena50raio.obj"
+        ]
       }
     }
   ]
-  name "solid(8)"
-  boundingObject USE CYLINDER_GEOMETRY
+  boundingObject USE ARENA
 }
 Viewpoint {
-  orientation 0.064166001721426 -0.994567330239015 -0.0819667606065046 5.092818864498922
-  position 96.82340359921405 -28.852208409612718 97.4544193540167
+  orientation 0.538621986566466 -0.5519121981626874 -0.6366154892134059 4.313146780859835
+  position 143.8879383160014 -27.21957181820921 146.65756937378148
   near 10
+  follow "vehicle"
   followType "None"
 }
 TexturedBackground {
@@ -277,8 +229,12 @@ TexturedBackgroundLight {
   texture "dusk"
 }
 DEF VEHICLE BmwX5 {
-  translation 135 -25 0.3
-  rotation 0 0 -1 0
+  hidden rotation_1 -8.418398526376014e-13 -1 -4.429227021651137e-09 0.00038012946260550923
+  hidden rotation_2 -1.2057643948697065e-12 1 6.343967309079604e-09 0.000380129442745126
+  hidden rotation_3 0 -0.9999999999999999 0 5.5042799861120025e-05
+  hidden rotation_4 0 0.9999999999999999 0 5.5042799861120025e-05
+  translation 149.99990397362217 -39.99999999999996 0.2997143129101984
+  rotation -1.531244324349819e-08 -0.9999999999999998 -1.7277673748750443e-08 0.0004978947412169625
   controller "<extern>"
   supervisor TRUE
   sensorsSlotFront [

@@ -2,8 +2,7 @@
 .idea
 
 # logs
-controllers/vehicle_reinforcement_learning/ex1/logs/
-controllers/vehicle_reinforcement_learning/ex1/vehicle_env/controller_crash.log
+controllers/vehicle_reinforcement_learning/ex1/vehicle_env/logs/tensorboard_logs
 
 # Webots generated files
 worlds/*.jpg
