@@ -2,15 +2,14 @@
 .idea
 
 # logs
-controllers/vehicle_reinforcement_learning/ex1/vehicle_env/logs/tensorboard_logs
+controllers/vehicle_reinforcement_learning/ex1/logs
 
 # Webots generated files
-worlds/*.jpg
-worlds/*.wbproj
+/worlds/freespace.wbt
+/worlds/track.wbt
 
 # Python virtual environment
 .venv/
 
 # Python cache
 __pycache__/
-*.pyc

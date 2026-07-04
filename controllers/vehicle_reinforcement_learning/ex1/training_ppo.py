@@ -73,13 +73,6 @@ def main() -> None:
     # In the tensorboard_logs directory, run
     # python -m tensorboard.main --logdir "./"
 
-    # train_env = DummyVecEnv([
-    #     lambda: gym.make("Vehicle-v0", mode="train")
-    # ])
-    # eval_env = DummyVecEnv([
-    #     lambda: gym.make("Vehicle-v0", mode="train")
-    # ])
-
     if learn_new:
         model = PPO(
             "MlpPolicy", env , verbose=1,
@@ -105,46 +98,6 @@ def main() -> None:
             tb_log_name=time_str,
             callback=[eval_callback, checkpoint_callback]
         )
-        # train_env = VecNormalize(
-        #     train_env,
-        #     norm_obs=False,  # IMPORTANT
-        #     norm_reward=True,  # ONLY this
-        #     clip_reward=10.0
-        # )
-        # eval_env = VecNormalize(
-        #     eval_env,
-        #     norm_obs=False,
-        #     norm_reward=False,  # always OFF in eval
-        # )
-        # eval_env.ret_rms = train_env.ret_rms
-        # eval_env.training = False
-        # model = PPO(
-        #     "MlpPolicy",
-        #     train_env,
-        #     n_steps=8192, # 1min
-        #     verbose=1,
-        #     tensorboard_log=base_dir + "/tensorboard_logs",
-        # )
-        # eval_callback = TrackingEvalCallback(
-        #     eval_env,
-        #     n_eval_episodes=5,
-        #     eval_freq=100000, #13min
-        #     best_model_save_path=base_dir + "/best_model",
-        #     log_path=base_dir + "/eval_logs_results",
-        #     metrics_save_path=os.path.join(base_dir, "eval_metrics", f"{time_str}.json"),
-        # )
-        # checkpoint_callback = CheckpointCallback(
-        #     save_freq=100000, #13min
-        #     save_path="logs/drift_11h_arena_norm_reward_8192_n_steps_checkpoints/",
-        #     name_prefix="ppo_vehicle"
-        # )
-        # model.learn(
-        #     total_timesteps=9_000_000, #20h
-        #     log_interval=10,
-        #     tb_log_name=time_str,
-        #     callback=[eval_callback, checkpoint_callback]
-        # )
-        # train_env.save(os.path.join(base_dir, "vecnormalize_pkls", "vecnormalize.pkl"))
     else:
         checkpoint_path = "logs/drift_open_space_reward_continuo_checkpoints/ppo_vehicle_300000_steps.zip"
         model = PPO.load(
@@ -171,49 +124,6 @@ def main() -> None:
             callback=[eval_callback, checkpoint_callback],
             reset_num_timesteps=False,
         )
-
-        # train_env = VecNormalize.load(
-        #     os.path.join(base_dir, "vecnormalize_pkls", "vecnormalize.pkl"),
-        #     train_env,
-        # )
-        # train_env.training = True
-        # train_env.norm_reward = True
-        #
-        # checkpoint_path = "logs/drift_open_space_reward_continuo_checkpoints/ppo_vehicle_300000_steps.zip"
-        # model = PPO.load(
-        #     checkpoint_path,
-        #     env=train_env,
-        #     tensorboard_log=base_dir + '/tensorboard_logs',
-        # )
-        #
-        # eval_env = VecNormalize.load(
-        #     os.path.join(base_dir, "vecnormalize.pkl"),
-        #     eval_env,
-        # )
-        # eval_callback = EvalCallback(
-        #     eval_env,
-        #     n_eval_episodes=5,
-        #     eval_freq=100000,
-        #     best_model_save_path=base_dir + "/best_model",
-        #     log_path=base_dir + "/eval_logs_results"
-        # )
-        # eval_env.training = False
-        # eval_env.norm_reward = False
-        #
-        # checkpoint_callback = CheckpointCallback(
-        #     save_freq=100000,
-        #     save_path="logs/drift_11h_arena_norm_reward_8192_n_steps_checkpoints/",
-        #     name_prefix="ppo_vehicle"
-        # )
-        #
-        # model.learn(
-        #     total_timesteps=9_000_000,  # additional timesteps
-        #     log_interval=10,
-        #     tb_log_name="time_str",
-        #     callback=[eval_callback, checkpoint_callback],
-        #     reset_num_timesteps=False,
-        # )
-
 
 if __name__ == '__main__':
     main()
