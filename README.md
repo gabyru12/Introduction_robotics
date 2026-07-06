@@ -135,14 +135,15 @@ and other Webots APIs.
 
 ---
 
-# Running the Simulation
+# Running the Project
 
-## Open Webots
+Before running any script:
 
-Launch Webots and open one of the available worlds:
+1. Open **Webots**.
+2. Load either:
 
 ```text
-worlds/arena.wbt
+worlds/arena.wbt # checkpoints are from this world
 ```
 
 or
@@ -151,11 +152,15 @@ or
 worlds/track.wbt
 ```
 
+3. Press **Play** in Webots.
+
+The Python controller will connect automatically when one of the scripts below is executed.
+
 ---
 
 # PPO Training
 
-Open:
+Training is performed using:
 
 ```text
 controllers/
@@ -165,113 +170,170 @@ controllers/
             └── training_ppo.py
 ```
 
-To start training from scratch:
+## Train a New Model
+
+Open `training_ppo.py` and set
 
 ```python
 learn_new = True
 ```
 
-Run:
+Then run:
 
 ```text
 training_ppo.py
 ```
 
-The script will:
+During training the script automatically:
 
-- Create the Gymnasium environment
-- Train a PPO agent
-- Save checkpoints
-- Log TensorBoard statistics
-- Run evaluation callbacks
+- creates the Gymnasium environment;
+- trains a PPO agent;
+- periodically evaluates the policy;
+- saves checkpoints every 100,000 steps;
+- records TensorBoard logs;
+- stores detailed evaluation metrics in JSON format.
+
+The generated files are saved inside:
+
+```text
+logs/
+├── best_model/
+├── checkpoints/
+├── eval_logs_results/
+├── eval_metrics/
+└── tensorboard_logs/
+```
 
 ---
 
-# Continue PPO Training
+## Continue Training from a Checkpoint
 
-To continue training from a checkpoint:
+To resume training, set
 
 ```python
 learn_new = False
 ```
 
-and specify:
+and modify
 
 ```python
-checkpoint_path = "logs/saved_checkpoints/ppo_vehicle_xxxxx_steps.zip"
+checkpoint_path = "logs/<checkpoint_folder>/ppo_vehicle_xxxxx_steps.zip"
 ```
 
-Run:
+Then execute:
 
 ```text
 training_ppo.py
 ```
 
-again.
+Training resumes from the selected checkpoint while preserving the PPO timestep counter.
 
 ---
 
 # DQN Training
 
-Open:
+The DQN implementation is available in
 
 ```text
 training_dqn.py
 ```
 
-and run it.
+It trains a DQN agent using a discretised version of the steering and throttle action space.
 
-The DQN implementation discretizes the continuous control space into steering/throttle combinations before training.
+Run the script directly after opening the desired Webots world.
 
 ---
 
-# Running a Trained Agent
+# Running a Trained Policy
 
-Open:
+Inference is performed using
 
 ```text
-inference.py
+controllers/
+└── vehicle_reinforcement_learning/
+    └── ex1/
+        └── vehicle_env/
+            └── inference.py
 ```
 
-Load the desired checkpoint:
+Select the desired checkpoint by modifying
 
 ```python
-model = PPO.load(
-    "logs/saved_checkpoints/<checkpoint_folder>/ppo_vehicle_xxxxx_steps.zip"
-)
+model = PPO.load(...)
 ```
 
-Run:
+and run
 
 ```text
 inference.py
 ```
 
-The vehicle will execute the learned policy inside Webots.
+The script:
+
+- loads the trained PPO policy;
+- executes deterministic inference;
+- records all environment metrics;
+- saves the recorded metrics to
+
+```text
+logs/eval_metrics/inference_metrics.json
+```
+
+These metrics can later be used by the plotting utilities.
+
+---
+
+# Plotting Results
+
+Three helper scripts are provided for visualising evaluation results:
+
+```text
+plot_feature_and_lap.py
+```
+
+Plots a selected metric (e.g., drift angle, slip angle or centreline distance) for a single lap.
+
+```text
+plot_feature_all_laps.py
+```
+
+Plots the selected metric across all recorded evaluation laps.
+
+```text
+plot_track_drift.py
+```
+
+Displays the driven trajectory coloured according to the drift angle.
+
+All plotting scripts use the JSON files stored in
+
+```text
+logs/eval_metrics/
+```
 
 ---
 
 # TensorBoard
 
-Training statistics are stored in:
+Training statistics are automatically written to
 
 ```text
 logs/tensorboard_logs/
 ```
 
-Launch TensorBoard:
+Launch TensorBoard from the project root:
 
 ```bash
-python -m tensorboard.main --logdir "./logs/tensorboard_logs"
+python -m tensorboard.main --logdir logs/tensorboard_logs
 ```
 
-Open:
+Then open
 
 ```text
 http://localhost:6006
 ```
 
-in a browser.
+to monitor training progress.
 
 ---
 
@@ -363,6 +425,8 @@ These changes increase rear instability and weight transfer, making drift initia
 
 # World Physics Configuration
 
+
+
 The physics configuration was also modified.
 
 ## Simulation Timestep
@@ -370,7 +434,7 @@ The physics configuration was also modified.
 Experiments were conducted using:
 
 ```text
-basicTimeStep = 32 ms
+basicTimeStep = 32 ms #recommended
 ```
 
 and
@@ -385,11 +449,13 @@ to evaluate the influence of simulation frequency on learning performance.
 
 ## ODE Physics Parameters
 
-| Parameter | Default | Modified |
-|------------|----------|----------|
-| ERP | 0.6 | 0.2 |
-| CFM | Undefined | 0.0001 |
-| softCFM | Undefined | 0.0002 |
+| Parameter       | Default   | Modified |
+|-----------------|-----------|----------|
+| ERP             | 0.6       | 0.2      |
+| CFM             | Undefined | 0.0001   |
+| softCFM         | Undefined | 0.0002   |
+| coulombFriction | 1.0       | 0.6      |
+
 
 These values soften contact constraints and help produce smoother tyre sliding behaviour.
 
@@ -422,14 +488,4 @@ to reduce tyre grip and facilitate drifting on low-friction surfaces.
 
 ```text
 logs/eval_metrics/
-```
-
----
-
-# Code Availability
-
-The complete implementation is available at:
-
-```text
-https://github.com/gabyru12/Introduction_robotics
 ```
