@@ -1,334 +1,435 @@
 # Autonomous Drifting Using Reinforcement Learning in Webots
- 
+
 Project developed for **Introduction to Intelligent Robotics (CC3046)**.
- 
-Authors:
+
+**Authors**
 - André Amaral
 - Gabriel Oliveira
 - José Sousa
- 
-## Compatible Operating Systems
- 
-The project was developed and tested on:
- 
+
+---
+
+# Overview
+
+This project investigates the use of **Deep Reinforcement Learning (DRL)** to train an autonomous vehicle capable of performing sustained drifting manoeuvres inside the **Webots** simulator.
+
+Two reinforcement learning algorithms were evaluated:
+
+- **Proximal Policy Optimization (PPO)**
+- **Deep Q-Network (DQN)**
+
+The final solution uses PPO to learn controlled drifting behaviour using LiDAR and vehicle-state information.
+
+---
+
+# Tested Environment
+
+The project was developed and tested using:
+
 - Windows 11
 - Webots R2025a
- 
-Compatibility with Linux or macOS has not been tested.
- 
+- Python 3.14
+- PyCharm Professional / Community Edition
+
+Compatibility with Linux and macOS has not been verified.
+
 ---
- 
-## Required Software
- 
-Before running the project, install:
- 
-### 1. Webots
- 
-Install Webots R2025a from:
- 
-Cyberbotics: Robotics simulation with Webots
- 
+
+# Required Software
+
+## 1. Webots
+
+Install:
+
+**Webots R2025a**
+
 Recommended installation path:
- 
+
 ```text
 C:\Program Files\Webots\
 ```
- 
-### 2. Python
- 
-Install Python 3.14.
- 
-### 3. PyCharm
- 
-Install JetBrains PyCharm Community Edition or Professional Edition.
- 
+
 ---
- 
-## Python Dependencies
- 
-Install the following Python packages:
- 
-```bash
-pip install gymnasium
-pip install stable-baselines3
+
+## 2. Python
+
+Install:
+
+```text
+Python 3.14
 ```
- 
-or
- 
-```bash
-pip install gymnasium stable-baselines3
-```
- 
+
 ---
- 
-## Project Setup
- 
-### Step 1 — Extract the Project
- 
-Extract the ZIP file to any local directory.
- 
+
+## 3. PyCharm
+
+Install:
+
+```text
+JetBrains PyCharm
+```
+
+Community or Professional Edition may be used.
+
+---
+
+# Python Dependencies
+
+Install the required packages:
+
+```bash
+pip install gymnasium stable-baselines3 tensorboard
+```
+
+---
+
+# Project Setup
+
+## Open the Project
+
+Extract the repository and open it in PyCharm.
+
 Example:
- 
+
 ```text
 C:\autonomous_drifting\
 ```
- 
+
 ---
- 
-### Step 2 — Open the Project
- 
-Open the extracted folder in PyCharm.
- 
----
- 
-### Step 3 — Create a Python Interpreter
- 
-Create a new local Python interpreter:
- 
-1. Open PyCharm.
-2. Click the interpreter selector at the bottom-right corner.
-3. Select:
- 
+
+## Configure Python Interpreter
+
+1. Open PyCharm
+2. Select:
+
 ```text
 Add New Interpreter
 ```
- 
-4. Choose:
- 
+
+3. Choose:
+
 ```text
 Local Interpreter
 ```
- 
-5. Select Python 3.14.
-6. Apply the changes.
- 
+
+4. Select Python 3.14
+
 ---
- 
-### Step 4 — Configure Webots Libraries
- 
-In PyCharm:
- 
-```text
-File
-→ Settings
-→ Project Structure
-→ Add Content Root
-```
- 
-Add the following folder:
- 
+
+## Configure Webots Python API
+
+Add the following folder as a project content root:
+
 ```text
 C:\Program Files\Webots\lib\controller\python
 ```
- 
-This is required so PyCharm can detect:
- 
+
+This allows PyCharm to correctly resolve:
+
 ```python
 from controller import Robot
 from vehicle import Driver
 ```
- 
+
 and other Webots APIs.
- 
+
 ---
- 
-## Running the Project
- 
-### Step 1 — Open Webots
- 
-Launch Webots.
- 
----
- 
-### Step 2 — Load a World
- 
-Navigate to:
- 
+
+# Running the Simulation
+
+## Open Webots
+
+Launch Webots and open one of the available worlds:
+
 ```text
-worlds/
+worlds/arena.wbt
 ```
- 
-and open one of the available environments:
- 
-```text
-arena.wbt
-```
- 
+
 or
- 
+
 ```text
-track.wbt
+worlds/track.wbt
 ```
- 
+
 ---
- 
-## PPO Training
- 
+
+# PPO Training
+
 Open:
- 
+
 ```text
-training_ppo.py
+controllers/
+└── vehicle_reinforcement_learning/
+    └── ex1/
+        └── vehicle_env/
+            └── training_ppo.py
 ```
- 
-To train a new model:
- 
+
+To start training from scratch:
+
 ```python
 learn_new = True
 ```
- 
-Then run:
- 
+
+Run:
+
 ```text
 training_ppo.py
 ```
- 
+
 The script will:
- 
-- Launch the Gymnasium environment.
-- Start PPO training.
-- Generate TensorBoard logs.
-- Save checkpoints periodically.
-- Perform evaluation episodes during training.
- 
+
+- Create the Gymnasium environment
+- Train a PPO agent
+- Save checkpoints
+- Log TensorBoard statistics
+- Run evaluation callbacks
+
 ---
- 
-## Continue PPO Training
- 
-To continue training a checkpoint:
- 
-Set:
- 
+
+# Continue PPO Training
+
+To continue training from a checkpoint:
+
 ```python
 learn_new = False
 ```
- 
-and specify the checkpoint path:
- 
+
+and specify:
+
 ```python
-checkpoint_path = "logs/.../ppo_vehicle_xxxxx_steps.zip"
+checkpoint_path = "logs/saved_checkpoints/ppo_vehicle_xxxxx_steps.zip"
 ```
- 
-Then run:
- 
+
+Run:
+
 ```text
 training_ppo.py
 ```
- 
+
 again.
- 
+
 ---
- 
-## DQN Training
- 
+
+# DQN Training
+
 Open:
- 
+
 ```text
 training_dqn.py
 ```
- 
+
 and run it.
- 
-This script:
- 
-- Converts the continuous steering/throttle space into discrete actions.
-- Trains a DQN agent.
-- Generates TensorBoard logs.
-- Stores evaluation results.
- 
+
+The DQN implementation discretizes the continuous control space into steering/throttle combinations before training.
+
 ---
- 
-## Running a Trained Agent
- 
+
+# Running a Trained Agent
+
 Open:
- 
+
 ```text
 inference.py
 ```
- 
-Modify:
- 
-```python
-model = PPO.load(...)
-```
- 
-to the desired checkpoint.
- 
-Example:
- 
+
+Load the desired checkpoint:
+
 ```python
 model = PPO.load(
-    "logs/drift_open_space_6h_30_60_degrees_checkpoints/ppo_vehicle_2500000_steps.zip"
+    "logs/saved_checkpoints/<checkpoint_folder>/ppo_vehicle_xxxxx_steps.zip"
 )
 ```
- 
+
 Run:
- 
+
 ```text
 inference.py
 ```
- 
+
 The vehicle will execute the learned policy inside Webots.
- 
+
 ---
- 
-## Visualizing Training Statistics
- 
-TensorBoard logs are generated inside:
- 
+
+# TensorBoard
+
+Training statistics are stored in:
+
 ```text
-logs/tensorboard_logs
+logs/tensorboard_logs/
 ```
- 
-Open a terminal in the project root and run:
- 
+
+Launch TensorBoard:
+
 ```bash
 python -m tensorboard.main --logdir "./logs/tensorboard_logs"
 ```
- 
-Then open:
- 
+
+Open:
+
 ```text
 http://localhost:6006
 ```
- 
-in your browser.
- 
+
+in a browser.
+
 ---
- 
-## Project Structure
- 
+
+# Project Structure
+
 ```text
-project/
+Introduction_robotics/
 │
 ├── controllers/
-    ├── test_folder_keyboard_control
+│   │
+│   ├── test_folder_keyboard_control/
+│   │   ├── main.py
+│   │   └── rule_based.py
+│   │
 │   └── vehicle_reinforcement_learning/
 │       └── ex1/
-│           ├── vehicle_env/__init__.py
-│           ├── training_ppo.py
-│           ├── training_dqn.py
-│           └── inference.py
+│           │
+│           ├── logs/
+│           │   ├── eval_logs_results/
+│           │   ├── eval_metrics/
+│           │   ├── saved_checkpoints/
+│           │   └── tensorboard_logs/
+│           │
+│           └── vehicle_env/
+│               ├── __init__.py
+│               ├── training_ppo.py
+│               ├── training_dqn.py
+│               ├── inference.py
+│               ├── plot_feature_all_laps.py
+│               ├── plot_feature_and_lap.py
+│               └── plot_track_drift.py
 │
-├── protos/           
+├── plugins/
+│
+├── protos/
+│   └── BmwX5.proto
+│   └── BmwX5Wheel.proto
+│   └── arena50raio.obj
+│
+├── reward_functions/
 │
 ├── worlds/
 │   ├── arena.wbt
 │   └── track.wbt
 │
-├── logs/
-│
+├── .gitignore
 └── README.md
 ```
- 
+
 ---
- 
-## Notes
- 
-- The Arena environment was primarily used for drift-learning experiments.
-- The Track environment was used for reward-shaping experiments and navigation tests.
-- PPO uses a continuous action space composed of steering and throttle.
+
+# Vehicle Modifications for Drifting
+
+The original Webots BMW X5 model was modified to make drifting behaviour possible and easier to learn.
+
+## Vehicle Parameters
+
+| Parameter                   | Original                | Modified           |
+|-----------------------------|-------------------------|--------------------|
+| Mass                        | 2000 kg                 | 1100 kg            |
+| Center of Mass              | 1.2975 0 0.1            | 1.0 0 -0.2         |
+| Front Track Width           | 1.628 m                 | 1.8 m              |
+| Rear Track Width            | 1.628 m                 | 1.5 m              |
+| Wheel Base                  | 2.995 m                 | 2.99 m             |
+| Time 0–100 km/h             | 7 s                     | 3 s                |
+| Engine Min RPM              | 1000                    | 1500               |
+| Engine Max RPM              | 4500                    | 8000               |
+| Engine Function Coefficients | 34.11 0.136 -0.00001461 | 600 2 -0.0004      |
+| Max Power                   | Default                 | 400000 W           |
+| Max Torque                  | Default                 | 1600 Nm            |
+| Max Steering Angle          | ≈ 0.5 rad               | 2.5 rad            |
+| Type                        | Default (AWD)           | "propulsion" (RWD) |
+| Wheel Mass                  | 30 kg                   | 50 kg              |
+| Wheel Damping               | 5                       | 2                  |
+---
+
+## Suspension Changes
+
+| Parameter | Original  | Modified |
+|------------|-----------|----------|
+| Front Spring Constant | undefined | 120000 N/m |
+| Rear Spring Constant | undefined | 90000 N/m |
+| Front Damping | undefined | 12000 N·s/m |
+| Rear Damping | undefined | 3000 N·s/m |
+
+These changes increase rear instability and weight transfer, making drift initiation easier.
+
+---
+
+# World Physics Configuration
+
+The physics configuration was also modified.
+
+## Simulation Timestep
+
+Experiments were conducted using:
+
+```text
+basicTimeStep = 32 ms
+```
+
+and
+
+```text
+basicTimeStep = 8 ms
+```
+
+to evaluate the influence of simulation frequency on learning performance.
+
+---
+
+## ODE Physics Parameters
+
+| Parameter | Default | Modified |
+|------------|----------|----------|
+| ERP | 0.6 | 0.2 |
+| CFM | Undefined | 0.0001 |
+| softCFM | Undefined | 0.0002 |
+
+These values soften contact constraints and help produce smoother tyre sliding behaviour.
+
+---
+
+## Wheel Contact Material
+
+A custom wheel material was introduced:
+
+```text
+"BmwX5Wheels"
+```
+
+and assigned to:
+
+```text
+contactMaterial
+```
+
+to reduce tyre grip and facilitate drifting on low-friction surfaces.
+
+---
+
+# Notes
+
+- PPO uses a continuous action space consisting of steering and throttle.
 - DQN uses a discretized version of the same action space.
-- Trained models and checkpoints are automatically saved inside the logs directory.
-Cyberbotics: Robotics simulation with Webots
-Cyberbotics - Robotics simulation with Webots
- 
+- Checkpoints and logs are automatically saved during training.
+- Evaluation metrics collected through custom callbacks can be found in:
+
+```text
+logs/eval_metrics/
+```
+
+---
+
+# Code Availability
+
+The complete implementation is available at:
+
+```text
+https://github.com/gabyru12/Introduction_robotics
+```
