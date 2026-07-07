@@ -1,5 +1,9 @@
 # Autonomous Drifting Using Reinforcement Learning in Webots
 
+<p align="center">
+  <img src="images/drift_snapshots.png" width="850">
+</p>
+
 Project developed for **Introduction to Intelligent Robotics (CC3046)**.
 
 **Authors**
