@@ -4,6 +4,16 @@
   <img src="images/drift_snapshots.png" width="850">
 </p>
 
+## 🎥 Demonstration Videos
+
+- **Intermediate policy (EvalCallback 7 – ~6 hours of training):**  
+  https://www.youtube.com/watch?v=Raf6e02fg0A<video1>
+
+- **Final policy (EvalCallback 12 – ~12 hours of training):**  
+  https://www.youtube.com/watch?v=z7TorifWU3g<video2>
+
+---
+
 Project developed for **Introduction to Intelligent Robotics (CC3046)**.
 
 **Authors**
