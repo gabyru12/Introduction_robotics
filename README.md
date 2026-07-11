@@ -4,8 +4,8 @@
   <img src="images/drift_snapshots.png" width="850">
 </p>
 <p align="center">
-  <img src="images/drift_7_evalcallback.gif" width="420">
-  <img src="images/drift_12_evalcallback.gif" width="420">
+  <img src="images/drift_7_evalcallback.gif" width="400">
+  <img src="images/drift_12_evalcallback.gif" width="400">
 </p>
 
 ## 🎥 Demonstration Videos
