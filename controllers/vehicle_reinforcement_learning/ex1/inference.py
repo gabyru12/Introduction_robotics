@@ -13,7 +13,7 @@ def main():
     metrics_save_path = os.path.join(base_dir, "eval_metrics", f"inference_metrics.json")
 
     model = PPO.load(base_dir +
-                     "/drift_12h_norm_rewards_timestep_32_facilitate_drifting_130_170_progress_reward_01_checkpoints"
+                     "/saved_checkpoints/drift_12h_norm_rewards_timestep_32_facilitate_drifting_130_170_progress_reward_01_checkpoints"
                      "/ppo_vehicle_1200000_steps.zip")
     env = gym.make("Vehicle-v0", mode=MODE)
 
